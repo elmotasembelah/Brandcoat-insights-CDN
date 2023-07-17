@@ -1,152 +1,152 @@
-let BARCHART;
-let LASTCHARTTOSHOWINDUSTRYFILTERMENU;
-let LASTCHARTTOSHOWAGENCYFILTERMENU;
+// let BARCHART;
+// let LASTCHARTTOSHOWINDUSTRYFILTERMENU;
+// let LASTCHARTTOSHOWAGENCYFILTERMENU;
 
-// charts choosing logic
-const chartsBtnList = document.querySelector(".charts-btn__list");
+// // charts choosing logic
+// const chartsBtnList = document.querySelector(".charts-btn__list");
 
-chartsBtnList.addEventListener("click", (e) => {
-    // ! these function should be only used when needed to make the design smoother
-    hideIndustryFiltersMenu();
-    hideAgencyFiltersMenu();
+// chartsBtnList.addEventListener("click", (e) => {
+//     // ! these function should be only used when needed to make the design smoother
+//     hideIndustryFiltersMenu();
+//     hideAgencyFiltersMenu();
 
-    const industryFiltersToggleBtn = document.querySelector(
-        ".industry-filters-toggle"
-    );
-    const agencyFiltersToggleBtn = document.querySelector(
-        ".agency-filters-toggle"
-    );
-    industryFiltersToggleBtn.textContent = "All industries";
-    agencyFiltersToggleBtn.textContent = "All agencies";
+//     const industryFiltersToggleBtn = document.querySelector(
+//         ".industry-filters-toggle"
+//     );
+//     const agencyFiltersToggleBtn = document.querySelector(
+//         ".agency-filters-toggle"
+//     );
+//     industryFiltersToggleBtn.textContent = "All industries";
+//     agencyFiltersToggleBtn.textContent = "All agencies";
 
-    chartName = e.target.textContent.trim();
-    if (chartName.length > 40) {
-        return;
-    }
-    switch (chartName) {
-        case "Industry data range":
-            displayPostsPerIndustryChart();
-            break;
-        case "Yearly data range":
-            displayPostsPerYearChart();
-            break;
-        case "Color analysis":
-            displayColorUsageChart();
-            break;
-        case "Logo type trend analysis":
-            displayPostsPerLogoDesignIndustry();
-            break;
-        case "Trend analysis (minimalist branding)":
-            displayLogoDesignUsagePerYearChart();
-            break;
-        case "Wuxing five elements (vI)":
-            displayElementsUsageChartv1();
-            break;
-        case "Wuxing five elements (v2)":
-            displayElementsUsageChartv2();
-            break;
-        case "Rebranding cycles analysis":
-            displayLogoChangeFrequencyChart();
-            break;
-        case "Agencies focus analysis":
-            displayAgenciesPostsPerIndustry();
-            break;
-    }
-});
+//     chartName = e.target.textContent.trim();
+//     if (chartName.length > 40) {
+//         return;
+//     }
+//     switch (chartName) {
+//         case "Industry data range":
+//             displayPostsPerIndustryChart();
+//             break;
+//         case "Yearly data range":
+//             displayPostsPerYearChart();
+//             break;
+//         case "Color analysis":
+//             displayColorUsageChart();
+//             break;
+//         case "Logo type trend analysis":
+//             displayPostsPerLogoDesignIndustry();
+//             break;
+//         case "Trend analysis (minimalist branding)":
+//             displayLogoDesignUsagePerYearChart();
+//             break;
+//         case "Wuxing five elements (vI)":
+//             displayElementsUsageChartv1();
+//             break;
+//         case "Wuxing five elements (v2)":
+//             displayElementsUsageChartv2();
+//             break;
+//         case "Rebranding cycles analysis":
+//             displayLogoChangeFrequencyChart();
+//             break;
+//         case "Agencies focus analysis":
+//             displayAgenciesPostsPerIndustry();
+//             break;
+//     }
+// });
 
-// filters lists showign and hiding logic
-const showIndustryFiltersMenu = (theChartThatShowedInudstryFilterMenu) => {
-    LASTCHARTTOSHOWINDUSTRYFILTERMENU = theChartThatShowedInudstryFilterMenu;
-    const industryFiltersList = document.querySelector(
-        ".industry-filter-menu--wapper"
-    );
-    industryFiltersList.style.display = "block";
-};
+// // filters lists showign and hiding logic
+// const showIndustryFiltersMenu = (theChartThatShowedInudstryFilterMenu) => {
+//     LASTCHARTTOSHOWINDUSTRYFILTERMENU = theChartThatShowedInudstryFilterMenu;
+//     const industryFiltersList = document.querySelector(
+//         ".industry-filter-menu--wapper"
+//     );
+//     industryFiltersList.style.display = "block";
+// };
 
-const hideIndustryFiltersMenu = () => {
-    const industryFiltersList = document.querySelector(
-        ".industry-filter-menu--wapper"
-    );
-    industryFiltersList.style.display = "none";
-};
+// const hideIndustryFiltersMenu = () => {
+//     const industryFiltersList = document.querySelector(
+//         ".industry-filter-menu--wapper"
+//     );
+//     industryFiltersList.style.display = "none";
+// };
 
-const showAgencyFiltersMenu = (theChartThatShowedAgencyFilterMenu) => {
-    LASTCHARTTOSHOWAGENCYFILTERMENU = theChartThatShowedAgencyFilterMenu;
+// const showAgencyFiltersMenu = (theChartThatShowedAgencyFilterMenu) => {
+//     LASTCHARTTOSHOWAGENCYFILTERMENU = theChartThatShowedAgencyFilterMenu;
 
-    const agencyFiltersList = document.querySelector(
-        ".agency-filter-menu--wapper"
-    );
-    agencyFiltersList.style.display = "block";
-};
+//     const agencyFiltersList = document.querySelector(
+//         ".agency-filter-menu--wapper"
+//     );
+//     agencyFiltersList.style.display = "block";
+// };
 
-const hideAgencyFiltersMenu = () => {
-    const agencyFiltersList = document.querySelector(
-        ".agency-filter-menu--wapper"
-    );
-    agencyFiltersList.style.display = "none";
-};
+// const hideAgencyFiltersMenu = () => {
+//     const agencyFiltersList = document.querySelector(
+//         ".agency-filter-menu--wapper"
+//     );
+//     agencyFiltersList.style.display = "none";
+// };
 
-// list of filters logic
-const industryFiltersToggleBtn = document.querySelector(
-    ".industry-filters-toggle"
-);
-const industryFilters = document.querySelector(".industry-filters");
-const industryFilterList = document.querySelector(".industry-filter-list");
+// // list of filters logic
+// const industryFiltersToggleBtn = document.querySelector(
+//     ".industry-filters-toggle"
+// );
+// const industryFilters = document.querySelector(".industry-filters");
+// const industryFilterList = document.querySelector(".industry-filter-list");
 
-industryFiltersToggleBtn.addEventListener("click", () => {
-    industryFilters.classList.toggle("show-filters-list");
-});
+// industryFiltersToggleBtn.addEventListener("click", () => {
+//     industryFilters.classList.toggle("show-filters-list");
+// });
 
-industryFilterList.addEventListener("click", (e) => {
-    filter = e.target.textContent;
-    if (filter.length > 50) {
-        return;
-    }
-    industryFiltersToggleBtn.textContent = e.target.textContent;
-    BARCHART.destroy();
-    switch (LASTCHARTTOSHOWINDUSTRYFILTERMENU) {
-        case "Color analysis":
-            displayColorUsageChart(filter);
-            break;
-        case "Rebranding cycles analysis":
-            displayLogoChangeFrequencyChart(filter);
-            break;
-        case "Logo type trend analysis":
-            displayPostsPerLogoDesignIndustry(filter);
-            break;
-        case "Wuxing five elements (vI)":
-            displayElementsUsageChartv1(filter);
-            break;
-        case "Wuxing five elements (v2)":
-            displayElementsUsageChartv2(filter);
-            break;
-    }
-});
+// industryFilterList.addEventListener("click", (e) => {
+//     filter = e.target.textContent;
+//     if (filter.length > 50) {
+//         return;
+//     }
+//     industryFiltersToggleBtn.textContent = e.target.textContent;
+//     BARCHART.destroy();
+//     switch (LASTCHARTTOSHOWINDUSTRYFILTERMENU) {
+//         case "Color analysis":
+//             displayColorUsageChart(filter);
+//             break;
+//         case "Rebranding cycles analysis":
+//             displayLogoChangeFrequencyChart(filter);
+//             break;
+//         case "Logo type trend analysis":
+//             displayPostsPerLogoDesignIndustry(filter);
+//             break;
+//         case "Wuxing five elements (vI)":
+//             displayElementsUsageChartv1(filter);
+//             break;
+//         case "Wuxing five elements (v2)":
+//             displayElementsUsageChartv2(filter);
+//             break;
+//     }
+// });
 
-const agencyFiltersToggleBtn = document.querySelector(".agency-filters-toggle");
-const agencyFilters = document.querySelector(".agency-filters");
-const agencyFilterList = document.querySelector(".agency-filter-list");
+// const agencyFiltersToggleBtn = document.querySelector(".agency-filters-toggle");
+// const agencyFilters = document.querySelector(".agency-filters");
+// const agencyFilterList = document.querySelector(".agency-filter-list");
 
-agencyFiltersToggleBtn.addEventListener("click", () => {
-    agencyFilters.classList.toggle("show-filters-list");
-});
+// agencyFiltersToggleBtn.addEventListener("click", () => {
+//     agencyFilters.classList.toggle("show-filters-list");
+// });
 
-agencyFilterList.addEventListener("click", (e) => {
-    filter = e.target.textContent;
-    if (filter.length > 30) {
-        return;
-    }
-    agencyFiltersToggleBtn.textContent = e.target.textContent;
-    BARCHART.destroy();
-    if (filter === "M — N Associates") {
-        filter = "M N Associates";
-    }
-    switch (LASTCHARTTOSHOWAGENCYFILTERMENU) {
-        case "Agencies focus analysis":
-            displayAgenciesPostsPerIndustry(filter);
-            break;
-    }
-});
+// agencyFilterList.addEventListener("click", (e) => {
+//     filter = e.target.textContent;
+//     if (filter.length > 30) {
+//         return;
+//     }
+//     agencyFiltersToggleBtn.textContent = e.target.textContent;
+//     BARCHART.destroy();
+//     if (filter === "M — N Associates") {
+//         filter = "M N Associates";
+//     }
+//     switch (LASTCHARTTOSHOWAGENCYFILTERMENU) {
+//         case "Agencies focus analysis":
+//             displayAgenciesPostsPerIndustry(filter);
+//             break;
+//     }
+// });
 // ?------------------------------------------
 // ?CDN
 // ?------------------------------------------
