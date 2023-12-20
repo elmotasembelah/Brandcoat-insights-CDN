@@ -32,7 +32,6 @@ const createSimpleBarChart = (
     titleText
 ) => {
     try {
-        console.log(CANVASES[canvasID].destroy);
         CANVASES[canvasID].destroy();
     } catch (error) {}
 
@@ -72,6 +71,7 @@ const createSimpleBarChart = (
 };
 
 const createLineChart = (
+    canvasID,
     xAxisNames,
     yAxisData,
     chartColors,
@@ -104,7 +104,11 @@ const createLineChart = (
         },
     };
 
-    BARCHART = new Chart(document.getElementById("bar-chart"), config);
+    try {
+        CANVASES[canvasID].destroy();
+    } catch (error) {}
+
+    CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
 };
 const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
     config = {
@@ -125,12 +129,21 @@ const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
         },
     };
 
-    BARCHART = new Chart(document.getElementById(`${canvasID}`), config);
+    try {
+        CANVASES[canvasID].destroy();
+    } catch (error) {}
+
+    CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
 };
 
 const createRadarChart = (canvasID, labels, dataSets) => {
     dataSets = prepareRadarChartDataSets(dataSets);
-    BARCHART = new Chart(document.getElementById(`${canvasID}`), {
+
+    try {
+        CANVASES[canvasID].destroy();
+    } catch (error) {}
+
+    CANVASES[canvasID] = new Chart(canvasID, {
         type: "radar",
         data: {
             labels: labels,
@@ -198,7 +211,11 @@ const createPolarAreaChart = (canvasID, labels, dataSets) => {
             },
         },
     };
-    BARCHART = new Chart(document.getElementById(`${canvasID}`), config);
+    try {
+        CANVASES[canvasID].destroy();
+    } catch (error) {}
+
+    CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
 };
 
 // End of Chart creationg logic
