@@ -220,64 +220,6 @@ const createPolarAreaChart = (canvasID, labels, dataSets) => {
 
 // End of Chart creationg logic
 
-// start of global filters logic
-
-const getQueryString = () => {
-    const filterValues = getAllGlobalFiltersValues();
-
-    let query = "";
-
-    for (const key in filterValues) {
-        const value = filterValues[key];
-        if (value) {
-            if (query.length === 0) {
-                query += "?";
-            } else {
-                query += "&";
-            }
-            query += `${key}=${value}`;
-        }
-    }
-    const processedQuery = replaceAmbersandWithAnd(query);
-    return processedQuery;
-};
-
-function getAllGlobalFiltersValues() {
-    const filtersValues = {};
-
-    FILTERS.forEach((filterName) => {
-        filtersValues[filterName] = getEachGlobalFilterValues(filterName);
-    });
-    return filtersValues;
-}
-
-function getEachGlobalFilterValues(filterName) {
-    const checkboxes = getFilterCheckboxes(filterName);
-
-    let selectedValues = "";
-
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            if (selectedValues.length === 0) {
-                selectedValues += checkbox.value;
-            } else {
-                selectedValues += "-" + checkbox.value;
-            }
-        }
-    });
-
-    return selectedValues;
-}
-
-function getFilterCheckboxes(filterName) {
-    const checkboxes = document.querySelectorAll(
-        `#globalFilter_dropdownMenu-${filterName} input[type="checkbox"]`
-    );
-    return checkboxes;
-}
-
-// End of global filters logic
-
 // Start of displaying each chart logic
 
 const displayBrandsPerIndustryChart = async (queryString = "") => {
@@ -452,6 +394,64 @@ const displayBrandsPerLogoFeature = async (queryString = "") => {
 
 // End of displaying each Chart logic
 
+// start of global filters logic
+
+const getQueryString = () => {
+    const filterValues = getAllGlobalFiltersValues();
+
+    let query = "";
+
+    for (const key in filterValues) {
+        const value = filterValues[key];
+        if (value) {
+            if (query.length === 0) {
+                query += "?";
+            } else {
+                query += "&";
+            }
+            query += `${key}=${value}`;
+        }
+    }
+    const processedQuery = replaceAmbersandWithAnd(query);
+    return processedQuery;
+};
+
+function getAllGlobalFiltersValues() {
+    const filtersValues = {};
+
+    FILTERS.forEach((filterName) => {
+        filtersValues[filterName] = getEachGlobalFilterValues(filterName);
+    });
+    return filtersValues;
+}
+
+function getEachGlobalFilterValues(filterName) {
+    const checkboxes = getFilterCheckboxes(filterName);
+
+    let selectedValues = "";
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            if (selectedValues.length === 0) {
+                selectedValues += checkbox.nextElementSibling.textContent;
+            } else {
+                selectedValues += "-" + checkbox.value;
+            }
+        }
+    });
+
+    return selectedValues;
+}
+
+function getFilterCheckboxes(filterName) {
+    const checkboxes = document.querySelectorAll(
+        `#globalFilter_dropdownMenu-${filterName} input[type="checkbox"]`
+    );
+    return checkboxes;
+}
+
+// End of global filters logic
+
 // Start of displaying all charts logic
 
 const displayChartsFunctions = [
@@ -479,6 +479,10 @@ const applyGlobalFilters = () => {
         chartFunction(queryString)
     );
 };
+
+document
+    .getElementById("applyGlobalFiltersBtn")
+    .addEventListener("click", applyGlobalFilters);
 
 displayAllCharts();
 
