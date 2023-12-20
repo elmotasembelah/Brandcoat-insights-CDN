@@ -1,163 +1,18 @@
-// let BARCHART;
-// let LASTCHARTTOSHOWINDUSTRYFILTERMENU;
-// let LASTCHARTTOSHOWAGENCYFILTERMENU;
+// used to handle the deletion of old charts when new ones are created
+const CANVASES = {};
 
-// // charts choosing logic
-// const chartsBtnList = document.querySelector(".charts-btn__list");
-
-// chartsBtnList.addEventListener("click", (e) => {
-//     // ! these function should be only used when needed to make the design smoother
-//     hideIndustryFiltersMenu();
-//     hideAgencyFiltersMenu();
-
-//     const industryFiltersToggleBtn = document.querySelector(
-//         ".industry-filters-toggle"
-//     );
-//     const agencyFiltersToggleBtn = document.querySelector(
-//         ".agency-filters-toggle"
-//     );
-//     industryFiltersToggleBtn.textContent = "All industries";
-//     agencyFiltersToggleBtn.textContent = "All agencies";
-
-//     chartName = e.target.textContent.trim();
-//     if (chartName.length > 40) {
-//         return;
-//     }
-//     switch (chartName) {
-//         case "Industry data range":
-//             displayPostsPerIndustryChart();
-//             break;
-//         case "Yearly data range":
-//             displayPostsPerYearChart();
-//             break;
-//         case "Color analysis":
-//             displayColorUsageChart();
-//             break;
-//         case "Logo type trend analysis":
-//             displayPostsPerLogoDesignIndustry();
-//             break;
-//         case "Trend analysis (minimalist branding)":
-//             displayLogoDesignUsagePerYearChart();
-//             break;
-//         case "Wuxing five elements (vI)":
-//             displayElementsUsageChartv1();
-//             break;
-//         case "Wuxing five elements (v2)":
-//             displayElementsUsageChartv2();
-//             break;
-//         case "Rebranding cycles analysis":
-//             displayLogoChangeFrequencyChart();
-//             break;
-//         case "Agencies focus analysis":
-//             displayAgenciesPostsPerIndustry();
-//             break;
-//     }
-// });
-
-// // filters lists showign and hiding logic
-// const showIndustryFiltersMenu = (theChartThatShowedInudstryFilterMenu) => {
-//     LASTCHARTTOSHOWINDUSTRYFILTERMENU = theChartThatShowedInudstryFilterMenu;
-//     const industryFiltersList = document.querySelector(
-//         ".industry-filter-menu--wapper"
-//     );
-//     industryFiltersList.style.display = "block";
-// };
-
-// const hideIndustryFiltersMenu = () => {
-//     const industryFiltersList = document.querySelector(
-//         ".industry-filter-menu--wapper"
-//     );
-//     industryFiltersList.style.display = "none";
-// };
-
-// const showAgencyFiltersMenu = (theChartThatShowedAgencyFilterMenu) => {
-//     LASTCHARTTOSHOWAGENCYFILTERMENU = theChartThatShowedAgencyFilterMenu;
-
-//     const agencyFiltersList = document.querySelector(
-//         ".agency-filter-menu--wapper"
-//     );
-//     agencyFiltersList.style.display = "block";
-// };
-
-// const hideAgencyFiltersMenu = () => {
-//     const agencyFiltersList = document.querySelector(
-//         ".agency-filter-menu--wapper"
-//     );
-//     agencyFiltersList.style.display = "none";
-// };
-
-// // list of filters logic
-// const industryFiltersToggleBtn = document.querySelector(
-//     ".industry-filters-toggle"
-// );
-// const industryFilters = document.querySelector(".industry-filters");
-// const industryFilterList = document.querySelector(".industry-filter-list");
-
-// industryFiltersToggleBtn.addEventListener("click", () => {
-//     industryFilters.classList.toggle("show-filters-list");
-// });
-
-// industryFilterList.addEventListener("click", (e) => {
-//     filter = e.target.textContent;
-//     if (filter.length > 50) {
-//         return;
-//     }
-//     industryFiltersToggleBtn.textContent = e.target.textContent;
-//     BARCHART.destroy();
-//     switch (LASTCHARTTOSHOWINDUSTRYFILTERMENU) {
-//         case "Color analysis":
-//             displayColorUsageChart(filter);
-//             break;
-//         case "Rebranding cycles analysis":
-//             displayLogoChangeFrequencyChart(filter);
-//             break;
-//         case "Logo type trend analysis":
-//             displayPostsPerLogoDesignIndustry(filter);
-//             break;
-//         case "Wuxing five elements (vI)":
-//             displayElementsUsageChartv1(filter);
-//             break;
-//         case "Wuxing five elements (v2)":
-//             displayElementsUsageChartv2(filter);
-//             break;
-//     }
-// });
-
-// const agencyFiltersToggleBtn = document.querySelector(".agency-filters-toggle");
-// const agencyFilters = document.querySelector(".agency-filters");
-// const agencyFilterList = document.querySelector(".agency-filter-list");
-
-// agencyFiltersToggleBtn.addEventListener("click", () => {
-//     agencyFilters.classList.toggle("show-filters-list");
-// });
-
-// agencyFilterList.addEventListener("click", (e) => {
-//     filter = e.target.textContent;
-//     if (filter.length > 30) {
-//         return;
-//     }
-//     agencyFiltersToggleBtn.textContent = e.target.textContent;
-//     BARCHART.destroy();
-//     if (filter === "M — N Associates") {
-//         filter = "M N Associates";
-//     }
-//     switch (LASTCHARTTOSHOWAGENCYFILTERMENU) {
-//         case "Agencies focus analysis":
-//             displayAgenciesPostsPerIndustry(filter);
-//             break;
-//     }
-// });
-// ?------------------------------------------
-// ?CDN
-// ?------------------------------------------
+const FILTERS = [
+    "Industry",
+    "Geographics",
+    "Generations",
+    "Psychographics",
+    "Matrix",
+];
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
-    // new filtering style
-    const queryString = getQueryString();
-
     const nonProcessedData = await fetch(
-        `https://brandcoat-colors-usage-api-production-b18a.up.railway.app/api/charts/${chartName}${queryString}`,
-        // `http://localhost:3000/api/charts/${chartName}${queryString}`,
+        `https://brandcoat-charts-api.up.railway.app/api/charts/${chartName}`,
+        // `http://localhost:3000/api/charts/${chartName}`,
 
         {
             headers: headers,
@@ -169,13 +24,19 @@ const fetchChartDataFromServer = async (chartName, headers = {}) => {
 };
 
 const createSimpleBarChart = (
+    canvasID,
     xAxisNames,
     yAxisData,
     chartColors,
     label,
     titleText
 ) => {
-    BARCHART = new Chart(document.getElementById("bar-chart"), {
+    try {
+        console.log(CANVASES[canvasID].destroy);
+        CANVASES[canvasID].destroy();
+    } catch (error) {}
+
+    CANVASES[canvasID] = new Chart(canvasID, {
         type: "bar",
         data: {
             labels: xAxisNames,
@@ -188,8 +49,8 @@ const createSimpleBarChart = (
             ],
         },
         options: {
-            // responsice: true,
-            // maintainAspectRatio: true,
+            responsice: true,
+            maintainAspectRatio: false,
             legend: { display: false },
             title: {
                 display: true,
@@ -207,7 +68,7 @@ const createSimpleBarChart = (
             },
         },
     });
-    console.log(BARCHART);
+    // console.log(BARCHART);
 };
 
 const createLineChart = (
@@ -232,6 +93,8 @@ const createLineChart = (
             borderColor: chartColors,
         },
         options: {
+            responsice: true,
+            maintainAspectRatio: false,
             legend: { display: false },
             title: {
                 display: true,
@@ -243,16 +106,39 @@ const createLineChart = (
 
     BARCHART = new Chart(document.getElementById("bar-chart"), config);
 };
+const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
+    config = {
+        type: "line",
+        data: {
+            labels: xAxisNames,
+            datasets: datasets,
+        },
+        options: {
+            responsice: true,
+            maintainAspectRatio: false,
+            // legend: { display: false },
+            title: {
+                display: true,
+                text: titleText,
+                fontSize: 16,
+            },
+        },
+    };
 
-const createRadarChart = (labels, dataSets) => {
+    BARCHART = new Chart(document.getElementById(`${canvasID}`), config);
+};
+
+const createRadarChart = (canvasID, labels, dataSets) => {
     dataSets = prepareRadarChartDataSets(dataSets);
-    BARCHART = new Chart(document.getElementById("bar-chart"), {
+    BARCHART = new Chart(document.getElementById(`${canvasID}`), {
         type: "radar",
         data: {
             labels: labels,
             datasets: dataSets,
         },
         options: {
+            responsice: true,
+            maintainAspectRatio: false,
             elements: {
                 line: {
                     borderWidth: 3,
@@ -290,7 +176,7 @@ const prepareRadarChartDataSets = (dataSets) => {
     return preparedDataSets;
 };
 
-const createPolarAreaChart = (labels, dataSets) => {
+const createPolarAreaChart = (canvasID, labels, dataSets) => {
     const data = {
         labels,
         datasets: dataSets,
@@ -299,6 +185,8 @@ const createPolarAreaChart = (labels, dataSets) => {
         type: "polarArea",
         data: data,
         options: {
+            responsice: true,
+            maintainAspectRatio: false,
             plugins: {
                 title: {
                     display: true,
@@ -310,130 +198,126 @@ const createPolarAreaChart = (labels, dataSets) => {
             },
         },
     };
-
-    BARCHART = new Chart(document.getElementById("bar-chart"), config);
+    BARCHART = new Chart(document.getElementById(`${canvasID}`), config);
 };
+
+// End of Chart creationg logic
+
+// start of global filters logic
 
 const getQueryString = () => {
-    const selectFilters = document.querySelectorAll(
-        ".select-filter:not(.exclude)"
-    );
+    const filterValues = getAllGlobalFiltersValues();
 
     let query = "";
-    selectFilters.forEach((selectFilter, index) => {
-        if (selectFilter.value !== "Select" && selectFilter.value !== "All") {
-            if (query === "") {
+
+    for (const key in filterValues) {
+        const value = filterValues[key];
+        if (value) {
+            if (query.length === 0) {
                 query += "?";
-            }
-            if (query !== "?" && query[query.length - 1] !== "&") {
+            } else {
                 query += "&";
             }
-            query += `${selectFilter.name}=${selectFilter.value}`;
+            query += `${key}=${value}`;
         }
-    });
-    return query;
+    }
+    const processedQuery = replaceAmbersandWithAnd(query);
+    return processedQuery;
 };
 
-const displayPostsPerIndustryChart = async () => {
-    chartData = await fetchChartDataFromServer("postsperindustry");
+function getAllGlobalFiltersValues() {
+    const filtersValues = {};
 
-    const { industriesNames, amountOfCountedPosts, chartColors } = chartData;
+    FILTERS.forEach((filterName) => {
+        filtersValues[filterName] = getEachGlobalFilterValues(filterName);
+    });
+    return filtersValues;
+}
 
-    // ? since this is the default chart we need to check first before we destroy because at first there won't be a chart to destroy
-    if (BARCHART) {
-        BARCHART.destroy();
-    } else {
-        BARCHART = document.getElementById("bar-chart");
-    }
+function getEachGlobalFilterValues(filterName) {
+    const checkboxes = getFilterCheckboxes(filterName);
+
+    let selectedValues = "";
+
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            if (selectedValues.length === 0) {
+                selectedValues += checkbox.value;
+            } else {
+                selectedValues += "-" + checkbox.value;
+            }
+        }
+    });
+
+    return selectedValues;
+}
+
+function getFilterCheckboxes(filterName) {
+    const checkboxes = document.querySelectorAll(
+        `#globalFilter_dropdownMenu-${filterName} input[type="checkbox"]`
+    );
+    return checkboxes;
+}
+
+// End of global filters logic
+
+// Start of displaying each chart logic
+
+const displayBrandsPerIndustryChart = async (queryString = "") => {
+    // chartData = await fetchChartDataFromServer(`brandsperindustry`);
+    chartData = await fetchChartDataFromServer(
+        `brandsperindustry${queryString}`
+    );
+
+    const { industriesNames, amountOfCountedBrands, chartColors } = chartData;
 
     createSimpleBarChart(
+        "brandsPerIndusry",
         industriesNames,
-        amountOfCountedPosts,
+        amountOfCountedBrands,
         chartColors,
         "Data Range",
         "Industry data range"
     );
 };
 
-const displayColorUsageChart = async (industryFilter = "All industries") => {
-    headers = { industryFilter };
-    const chartData = await fetchChartDataFromServer("colorusage", headers);
+const displayColorUsageChart = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(`colorusage${queryString}`);
 
-    // console.log(BARCHART.getContext("2d"));
-
-    const {
-        countedColorsNames,
-        countedColorsValues,
-        histogramColors,
-        INDUSTRYLISTFORFILTERMENU,
-    } = chartData;
-
-    BARCHART.destroy();
+    const { countedColorsNames, countedColorsValues, histogramColors } =
+        chartData;
 
     createSimpleBarChart(
+        "colorUsage",
         countedColorsNames,
         countedColorsValues,
         histogramColors,
         "Color analysis",
-        `Color analysis in ${industryFilter}`
+        `Color analysis `
     );
-
-    showIndustryFiltersMenu("Color analysis");
 };
 
-const displayLogoChangeFrequencyChart = async (
-    industryFilter = "All industries"
-) => {
-    headers = { industryFilter };
-
-    chartData = await fetchChartDataFromServer("logochangefrequency", headers);
+const displayLogoChangeFrequencyChart = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(
+        `logochangefrequency${queryString}`
+    );
 
     const { countedYearsKeys, countedYearsValues, chartColor } = chartData;
 
-    BARCHART.destroy();
-
     createSimpleBarChart(
+        "logoChangeFrequency",
         countedYearsKeys,
         countedYearsValues,
         chartColor,
         "Brands",
-        `Rebranding cycles analysis in ${industryFilter}`
+        `Rebranding cycles analysis`
     );
-    showIndustryFiltersMenu("Rebranding cycles analysis");
 };
 
-const displayAgenciesPostsPerIndustry = async (
-    agencyfilter = "All agencies"
-) => {
-    showAgencyFiltersMenu("Agencies focus analysis");
-
-    const headers = {
-        agencyfilter,
-    };
+const displayBrandsPerLogoDesignIndustry = async (queryString = "") => {
     chartData = await fetchChartDataFromServer(
-        "agenciespostsperindustry",
-        headers
+        `brandsperlogoDesign${queryString}`
     );
-
-    const { industriesNames, amountOfCountedPosts, chartColors } = chartData;
-
-    BARCHART.destroy();
-
-    createSimpleBarChart(
-        industriesNames,
-        amountOfCountedPosts,
-        chartColors,
-        "Amount of projects",
-        "Agencies focus analysis"
-    );
-};
-
-const displayPostsPerLogoDesignIndustry = async (
-    industryFilter = "All industries"
-) => {
-    headers = { industryFilter };
-
-    chartData = await fetchChartDataFromServer("postsperlogoDesign", headers);
 
     const {
         countedDesignApprouchesKeys,
@@ -441,91 +325,163 @@ const displayPostsPerLogoDesignIndustry = async (
         chartColor,
     } = chartData;
 
-    BARCHART.destroy();
-
     createSimpleBarChart(
+        "brandsPerLogoDesign",
         countedDesignApprouchesKeys,
         countedDesignApprouchesValues,
         chartColor,
         "Amount of logo type usage",
-        `Logo type trend analysis in ${industryFilter}`
+        `Logo type trend analysis`
     );
-    showIndustryFiltersMenu("Logo type trend analysis");
 };
 
-const displayElementsUsageChartv1 = async (
-    industryFilter = "All industries"
-) => {
-    headers = { industryFilter };
-    const chartData = await fetchChartDataFromServer("elementsusage", headers);
+const displayElementsUsageChartv1 = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(`elementsusage${queryString}`);
 
     const { labels, dataSets } = chartData;
-    BARCHART.destroy();
-    createRadarChart(labels, dataSets);
-    showIndustryFiltersMenu("Wuxing five elements (vI)");
+
+    createRadarChart("elementsUsageV1", labels, dataSets);
 };
 
-const displayElementsUsageChartv2 = async (
-    industryFilter = "All industries"
-) => {
-    headers = { industryFilter };
-    const chartData = await fetchChartDataFromServer("elementsusage", headers);
+const displayElementsUsageChartv2 = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(`elementsusage${queryString}`);
 
     const { labels, dataSets } = chartData;
-    BARCHART.destroy();
-    createPolarAreaChart(labels, dataSets);
-    showIndustryFiltersMenu("Wuxing five elements (v2)");
+
+    createPolarAreaChart("elementsUsageV2", labels, dataSets);
 };
 
-const displayPostsPerYearChart = async () => {
-    chartData = await fetchChartDataFromServer("postsperyear");
+const displayBrandsPerYearChart = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(`brandsperyear${queryString}`);
 
-    const { years, countedPosts, chartColors } = chartData;
-
-    BARCHART.destroy();
+    const { years, countedBrands, chartColors } = chartData;
 
     createSimpleBarChart(
+        "brandsPerYear",
         years,
-        countedPosts,
+        countedBrands,
         chartColors,
         "Data range",
         "Yearly data range"
     );
 };
 
-const displayLogoDesignUsagePerYearChart = async () => {
-    // headers to be added once we make the chart dynamic accros multiple logo designs
+const displayLogoTypeUsagePerYearChart = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(
+        `logodesignusageperyear${queryString}`
+    );
 
-    chartData = await fetchChartDataFromServer("logodesignusageperyear");
+    const { years, datasets } = chartData;
 
-    const { years, designApprouchUsage, chartColors } = chartData;
-
-    BARCHART.destroy();
-
-    createLineChart(
+    createMultiLineChart(
+        "logoTypeUsagePerYear",
         years,
-        designApprouchUsage,
-        chartColors,
-        "Amount of usage",
+        datasets,
+        // "Amount of usage",
         "Trend analysis (minimalist branding)"
     );
 };
 
-displayPostsPerIndustryChart("All industries");
+const displayBrandsPerLogoTypeChart = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(
+        `brandsperlogotype${queryString}`
+    );
 
-// New
+    const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
 
-// under dev
+    createSimpleBarChart(
+        "brandsPerLogoType",
+        logoTypesNames,
+        amountOfCountedBrands,
+        chartColors,
+        "Data Range",
+        "Industry data range"
+    );
+};
 
-// dynamicly created the filter list
-// const createIndustryFilterList = (indusryeslist) => {
-//     industryFilterList.innerHTML = "";
-//     indusryeslist.forEach((industry) => {
-//         const li = document.createElement("li");
-//         const button = document.createElement("button");
-//         button.textContent = industry;
-//         button.classList.add("btn");
-//         li.appendChild(button);
-//         industryFilterList.appendChild(li);
-//     });
-// };
+const displayBrandsPerLogoColorCount = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(
+        `brandsperlogocolorcount${queryString}`
+    );
+
+    const { colorCountNames, amountOfCountedBrands, chartColors } = chartData;
+
+    createSimpleBarChart(
+        "brandsPerLogoColorCount",
+        colorCountNames,
+        amountOfCountedBrands,
+        chartColors,
+        "Data Range",
+        "Industry data range"
+    );
+};
+
+const displayBrandsPerLogoFeature = async (queryString = "") => {
+    chartData = await fetchChartDataFromServer(
+        `brandsperlogofeatures${queryString}`
+    );
+
+    const { logoFeaturesNames, amountOfCountedBrands, chartColors } = chartData;
+
+    createSimpleBarChart(
+        "brandsPerLogoFeature",
+        logoFeaturesNames,
+        amountOfCountedBrands,
+        chartColors,
+        "Data Range",
+        "Industry data range"
+    );
+};
+
+// End of displaying each Chart logic
+
+// Start of displaying all charts logic
+
+const displayChartsFunctions = [
+    displayBrandsPerIndustryChart,
+    displayColorUsageChart,
+    displayLogoChangeFrequencyChart,
+    displayBrandsPerLogoDesignIndustry,
+    displayElementsUsageChartv1,
+    displayElementsUsageChartv2,
+    displayBrandsPerYearChart,
+    displayLogoTypeUsagePerYearChart,
+    displayBrandsPerLogoTypeChart,
+    displayBrandsPerLogoColorCount,
+    displayBrandsPerLogoFeature,
+];
+
+const displayAllCharts = () => {
+    displayChartsFunctions.forEach((chartFunction) => chartFunction());
+};
+
+const applyGlobalFilters = () => {
+    const queryString = getQueryString();
+
+    displayChartsFunctions.forEach((chartFunction) =>
+        chartFunction(queryString)
+    );
+};
+
+displayAllCharts();
+
+// End of displaying all charts logic
+
+// Start of utility function
+
+function replaceAmbersandWithAnd(originalString) {
+    // const replacesString = originalString.replace(/&/g, "and");
+    // return replacesString;
+    if (originalString.includes("Cafes & Bistros") !== -1) {
+        const editedString = originalString.replace(
+            "Cafes & Bistros",
+            "Cafes and Bistros"
+        );
+        return editedString;
+    }
+    return originalString;
+}
+
+// End of utility function
+
+// https://cdn.jsdelivr.net/gh/elmotasembelah/Brandcoat-insights-CDN/new-insights.js
