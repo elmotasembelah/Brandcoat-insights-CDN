@@ -268,7 +268,7 @@ function getEachGlobalFilterValues(filterName) {
 
     return selectedValues;
 }
-s;
+
 function getFilterCheckboxes(filterName) {
     const checkboxes = document.querySelectorAll(
         `#globalFilter_dropdownMenu-${filterName} input[type="checkbox"]`
