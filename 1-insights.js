@@ -337,7 +337,7 @@ const displayLogoTypeUsagePerYearChart = async (queryString = "") => {
         years,
         datasets,
         // "Amount of usage",
-        "Trend analysis (minimalist branding)"
+        "Logo type trend analysis"
     );
 };
 
@@ -480,11 +480,11 @@ const applyGlobalFilters = () => {
     );
 };
 
-document
-    .getElementById("applyGlobalFiltersBtn")
-    .addEventListener("click", applyGlobalFilters);
-
-displayAllCharts();
+const connectApplyGlobalFiltersBtn = () => {
+    document
+        .getElementById("applyGlobalFiltersBtn")
+        .addEventListener("click", applyGlobalFilters);
+};
 
 // End of displaying all charts logic
 
@@ -505,4 +505,9 @@ function replaceAmbersandWithAnd(originalString) {
 
 // End of utility function
 
-// https://cdn.jsdelivr.net/gh/elmotasembelah/Brandcoat-insights-CDN/new-insights.js
+const initPage = () => {
+    connectApplyGlobalFiltersBtn();
+    displayAllCharts;
+};
+
+initPage();
