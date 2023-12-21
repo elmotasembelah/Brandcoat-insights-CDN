@@ -480,12 +480,6 @@ const applyGlobalFilters = () => {
     );
 };
 
-const connectApplyGlobalFiltersBtn = () => {
-    document
-        .getElementById("applyGlobalFiltersBtn")
-        .addEventListener("click", applyGlobalFilters);
-};
-
 // End of displaying all charts logic
 
 // Start of utility function
@@ -506,7 +500,6 @@ function replaceAmbersandWithAnd(originalString) {
 // End of utility function
 
 const initPage = () => {
-    connectApplyGlobalFiltersBtn();
     displayAllCharts;
 };
 
