@@ -1,5 +1,6 @@
 // used to handle the deletion of old charts when new ones are created
 const CANVASES = {};
+let delayed;
 
 const FILTERS = [
   "Industry",
@@ -64,6 +65,23 @@ const createSimpleBarChart = (
             },
           },
         ],
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+          }
+          return delay;
+        },
       },
     },
   });
