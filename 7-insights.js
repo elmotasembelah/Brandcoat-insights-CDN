@@ -132,6 +132,11 @@ const createLineChart = (
   CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
 };
 const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
+  // TODO: this should be moved and used in the new datasets prep code which is being moved from the backend
+  datasets.forEach((dataset) => {
+    dataset.tension = 0.3;
+  });
+
   const config = {
     type: "line",
     data: {
