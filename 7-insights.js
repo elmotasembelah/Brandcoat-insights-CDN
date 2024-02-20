@@ -73,12 +73,15 @@ const createSimpleBarChart = (
         },
         delay: (context) => {
           let delay = 0;
+          let delaySpeedMultiplier = 200;
           if (
             context.type === "data" &&
             context.mode === "default" &&
             !delayed
           ) {
-            delay = context.dataIndex * 300 + context.datasetIndex * 100;
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
           }
           return delay;
         },
