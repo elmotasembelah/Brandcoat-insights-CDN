@@ -152,6 +152,26 @@ const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
         text: titleText,
         fontSize: 16,
       },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
     },
   };
 
@@ -189,6 +209,26 @@ const createRadarChart = (canvasID, labels, dataSets) => {
           // min: 20,
           // max: 100,
           // stepSize: 10,
+        },
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
         },
       },
     },
@@ -233,6 +273,26 @@ const createPolarAreaChart = (canvasID, labels, dataSets) => {
         },
         legend: {
           display: true,
+        },
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
         },
       },
     },
