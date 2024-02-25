@@ -12,14 +12,16 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/charts/${chartName}`,
-    // `http://localhost:3000/api/charts/${chartName}`,
+    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    // `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
     }
   );
   const processedData = await nonProcessedData.json();
+
+  console.log(processedData);
 
   return processedData;
 };
@@ -567,9 +569,41 @@ const applyGlobalFilters = () => {
   const queryString = getQueryString();
 
   displayChartsFunctions.forEach((chartFunction) => chartFunction(queryString));
+
+  setFilteredBrandsCountText();
 };
 
 // End of displaying all charts logic
+
+// start of extra logic about charts
+
+const getFilteredBrandsCount = async () => {
+  const res = await fetch(
+    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
+    // `http://localhost:3000/api/v1/brands/filtered-brands/length`
+  );
+
+  // if (res.status !== "200") {
+  //   console.log(res.status);
+  //   return 0;
+  // }
+
+  const { matchedBrands } = await res.json();
+
+  return matchedBrands;
+};
+
+const setFilteredBrandsCountText = async () => {
+  const filteredBrandsCount = await getFilteredBrandsCount();
+
+  const filteredBrandsCountText = document.querySelector(
+    "#filteredBrandsCountText"
+  );
+
+  filteredBrandsCountText.textContent = `Matched ${filteredBrandsCount} Brands`;
+};
+
+// end of extra logic about charts
 
 // Start of utility function
 
