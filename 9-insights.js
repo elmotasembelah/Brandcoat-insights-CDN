@@ -12,14 +12,16 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/charts/${chartName}`,
-    // `http://localhost:3000/api/charts/${chartName}`,
+    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    // `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
     }
   );
   const processedData = await nonProcessedData.json();
+
+  console.log(processedData);
 
   return processedData;
 };
@@ -152,6 +154,26 @@ const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
         text: titleText,
         fontSize: 16,
       },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
     },
   };
 
@@ -189,6 +211,26 @@ const createRadarChart = (canvasID, labels, dataSets) => {
           // min: 20,
           // max: 100,
           // stepSize: 10,
+        },
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
         },
       },
     },
@@ -233,6 +275,26 @@ const createPolarAreaChart = (canvasID, labels, dataSets) => {
         },
         legend: {
           display: true,
+        },
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
         },
       },
     },
@@ -507,9 +569,41 @@ const applyGlobalFilters = () => {
   const queryString = getQueryString();
 
   displayChartsFunctions.forEach((chartFunction) => chartFunction(queryString));
+
+  setFilteredBrandsCountText();
 };
 
 // End of displaying all charts logic
+
+// start of extra logic about charts
+
+const getFilteredBrandsCount = async () => {
+  const res = await fetch(
+    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
+    // `http://localhost:3000/api/v1/brands/filtered-brands/length`
+  );
+
+  // if (res.status !== "200") {
+  //   console.log(res.status);
+  //   return 0;
+  // }
+
+  const { matchedBrands } = await res.json();
+
+  return matchedBrands;
+};
+
+const setFilteredBrandsCountText = async () => {
+  const filteredBrandsCount = await getFilteredBrandsCount();
+
+  const filteredBrandsCountText = document.querySelector(
+    "#filteredBrandsCountText"
+  );
+
+  filteredBrandsCountText.textContent = `Matched ${filteredBrandsCount} Brands`;
+};
+
+// end of extra logic about charts
 
 // Start of utility function
 
