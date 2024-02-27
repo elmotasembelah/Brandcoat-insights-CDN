@@ -583,10 +583,11 @@ const getFilteredBrandsCount = async () => {
     // `http://localhost:3000/api/v1/brands/filtered-brands/length`
   );
 
-  // if (res.status !== "200") {
-  //   console.log(res.status);
-  //   return 0;
-  // }
+  if (res.status !== 200) {
+    // make 200 a num not a string
+    console.log(res.status);
+    return 0;
+  }
 
   const { matchedBrands } = await res.json();
 
