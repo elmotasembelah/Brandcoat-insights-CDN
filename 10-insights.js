@@ -637,6 +637,12 @@ function replaceAmbersandWithAnd(originalString) {
     );
     return editedString;
   }
+
+  if (originalString.includes("F & B") !== -1) {
+    const editedString = originalString.replace("F & B", "F and B");
+    return editedString;
+  }
+
   return originalString;
 }
 
