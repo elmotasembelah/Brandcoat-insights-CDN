@@ -67,6 +67,11 @@ const createSimpleBarChart = (
             },
           },
         ],
+        x: {
+          grid: {
+            display: false,
+          },
+        },
       },
       animation: {
         // controls the delay of each point appearing
@@ -124,6 +129,13 @@ const createLineChart = (
         text: titleText,
         fontSize: 16,
       },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+      },
     },
   };
 
@@ -153,6 +165,13 @@ const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
         display: true,
         text: titleText,
         fontSize: 16,
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
       },
       animation: {
         // controls the delay of each point appearing
