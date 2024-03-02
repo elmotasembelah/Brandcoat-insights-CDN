@@ -4,10 +4,10 @@ let delayed;
 
 const FILTERS = [
   "Industry",
+  "CountryOfOrigin",
   "Geographics",
   "Generations",
   "Psychographics",
-  "Matrix",
 ];
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
