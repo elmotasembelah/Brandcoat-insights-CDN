@@ -12,16 +12,14 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
     }
   );
   const processedData = await nonProcessedData.json();
-
-  console.log(processedData);
 
   return processedData;
 };
@@ -505,6 +503,43 @@ const displayBrandsPerLogoFeature = async (queryString = "") => {
   );
 };
 
+const displayWordsPerBrandNameChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `wordsperbrandname${queryString}`
+  );
+
+  const { wordsPerBrandNameKeys, amountOfwordsPerBrandName, chartColors } =
+    chartData;
+
+  createSimpleBarChart(
+    "wordsPerBrandName",
+    wordsPerBrandNameKeys,
+    amountOfwordsPerBrandName,
+    chartColors,
+    "Data Range",
+    "Words per brand name"
+  );
+};
+
+const displayNameLengthPerBrand = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `namelengthperbrand${queryString}`
+  );
+
+  console.log("name length per brand", chartData);
+
+  const { NameLengthsKeys, amountOfLengths, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "nameLengthPerBrand",
+    NameLengthsKeys,
+    amountOfLengths,
+    chartColors,
+    "Data Range",
+    "Name length Per brand"
+  );
+};
+
 // End of displaying each Chart logic
 
 // start of global filters logic
@@ -578,6 +613,8 @@ const displayChartsFunctions = [
   displayBrandsPerLogoTypeChart,
   displayBrandsPerLogoColorCount,
   displayBrandsPerLogoFeature,
+  displayWordsPerBrandNameChart,
+  displayNameLengthPerBrand(),
 ];
 
 const displayAllCharts = () => {
@@ -598,8 +635,8 @@ const applyGlobalFilters = () => {
 
 const getFilteredBrandsCount = async () => {
   const res = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
-    // `http://localhost:3000/api/v1/brands/filtered-brands/length`
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
+    `http://localhost:3000/api/v1/brands/filtered-brands/length`
   );
 
   if (res.status !== 200) {
