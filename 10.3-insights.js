@@ -12,8 +12,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -340,8 +340,8 @@ const displayBrandsPerIndustryChart = async (queryString = "") => {
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -431,8 +431,8 @@ const displayBrandsPerYearChart = async (queryString = "") => {
     years,
     countedBrands,
     chartColors,
-    "Data range",
-    "Yearly data range"
+    "Brands",
+    "Yearly brands"
   );
 };
 
@@ -464,8 +464,8 @@ const displayBrandsPerLogoTypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -481,8 +481,8 @@ const displayBrandsPerLogoColorCount = async (queryString = "") => {
     colorCountNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -498,8 +498,8 @@ const displayBrandsPerLogoFeature = async (queryString = "") => {
     logoFeaturesNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -516,7 +516,7 @@ const displayWordsPerBrandNameChart = async (queryString = "") => {
     wordsPerBrandNameKeys,
     amountOfwordsPerBrandName,
     chartColors,
-    "Data Range",
+    "Brands",
     "Words per brand name"
   );
 };
@@ -526,8 +526,6 @@ const displayNameLengthPerBrand = async (queryString = "") => {
     `namelengthperbrand${queryString}`
   );
 
-  console.log("name length per brand", chartData);
-
   const { NameLengthsKeys, amountOfLengths, chartColors } = chartData;
 
   createSimpleBarChart(
@@ -535,8 +533,25 @@ const displayNameLengthPerBrand = async (queryString = "") => {
     NameLengthsKeys,
     amountOfLengths,
     chartColors,
-    "Data Range",
+    "Brands",
     "Name length Per brand"
+  );
+};
+
+const displayBrandsPerGeneration = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspergeneration${queryString}`
+  );
+
+  const { GenerationNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerGeneration",
+    GenerationNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per generation"
   );
 };
 
@@ -615,6 +630,7 @@ const displayChartsFunctions = [
   displayBrandsPerLogoFeature,
   displayWordsPerBrandNameChart,
   displayNameLengthPerBrand,
+  displayBrandsPerGeneration,
 ];
 
 const displayAllCharts = () => {
