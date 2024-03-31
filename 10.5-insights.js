@@ -673,7 +673,7 @@ const setFilteredBrandsCountText = async () => {
     "#filteredBrandsCountText"
   );
 
-  filteredBrandsCountText.textContent = `Matched ${filteredBrandsCount} Brands`;
+  filteredBrandsCountText.textContent = `${filteredBrandsCount}`;
 };
 
 // end of extra logic about charts
