@@ -12,8 +12,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    `http://localhost:3000/api/v1/charts/${chartName}`,
+    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    // `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -807,7 +807,7 @@ const applyGlobalFilters = () => {
   const queryString = getQueryString();
 
   displayChartsFunctions.forEach((chartFunction) => chartFunction(queryString));
-
+  setFiltebrandsPerCityCountedBrandsCitiesCount();
   setFilteredBrandsCountText();
 };
 
@@ -817,8 +817,8 @@ const applyGlobalFilters = () => {
 
 const getFilteredBrandsCount = async () => {
   const res = await fetch(
-    // `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
-    `http://localhost:3000/api/v1/brands/filtered-brands/length`
+    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
+    // `http://localhost:3000/api/v1/brands/filtered-brands/length`
   );
 
   if (res.status !== 200) {
@@ -841,6 +841,57 @@ const setFilteredBrandsCountText = async () => {
 
   filteredBrandsCountTexts.forEach((filteredBrandsCountText) => {
     filteredBrandsCountText.textContent = `${filteredBrandsCount}`;
+  });
+};
+
+const getFilteredBrandsCitiesCount = async () => {
+  const res = await fetch(
+    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/cities`
+    // `http://localhost:3000/api/v1/brands/filtered-brands/cities`
+  );
+  if (res.status !== 200) {
+    // make 200 a num not a string
+    console.log(res.status);
+    return 0;
+  }
+
+  const brandsPerCityCount = await res.json();
+
+  return brandsPerCityCount;
+};
+
+const setFiltebrandsPerCityCountedBrandsCitiesCount = async () => {
+  const filteredBrandsCitiesCount = await getFilteredBrandsCitiesCount();
+  const filteredBrandsCitiesCountKeys = Object.keys(filteredBrandsCitiesCount);
+
+  // getting brands per cities count
+  const hanoiBrandsCount =
+    filteredBrandsCitiesCount[filteredBrandsCitiesCountKeys[0]];
+  const hoChiMinhCityBrandsCount =
+    filteredBrandsCitiesCount[filteredBrandsCitiesCountKeys[1]];
+  const daNangBrandsCount =
+    filteredBrandsCitiesCount[filteredBrandsCitiesCountKeys[2]];
+
+  // getting elements that will contain the amount
+  const HanoiCityBrandsCountTexts = document.querySelectorAll(
+    "#hanoicitybrandscounttext"
+  );
+  const hoChiMinhCityBrandsCountTexts = document.querySelectorAll(
+    "#hochiminhcitybrandscounttext"
+  );
+  const daNangCityBrandsCountTexts = document.querySelectorAll(
+    "#danangcitybrandscounttext"
+  );
+
+  // settingg the value
+  HanoiCityBrandsCountTexts.forEach((HanoiCityBrandsCountText) => {
+    HanoiCityBrandsCountText.textContent = `${hanoiBrandsCount}`;
+  });
+  hoChiMinhCityBrandsCountTexts.forEach((hoChiMinhCityBrandsCountText) => {
+    hoChiMinhCityBrandsCountText.textContent = `${hoChiMinhCityBrandsCount}`;
+  });
+  daNangCityBrandsCountTexts.forEach((daNangCityBrandsCountText) => {
+    daNangCityBrandsCountText.textContent = `${daNangBrandsCount}`;
   });
 };
 
@@ -871,6 +922,8 @@ function replaceAmbersandWithAnd(originalString) {
 
 const initPage = () => {
   displayAllCharts();
+  setFiltebrandsPerCityCountedBrandsCitiesCount();
+  setFilteredBrandsCountText();
 };
 
 initPage();
