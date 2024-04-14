@@ -1,0 +1,12 @@
+how to remove the bg grid 
+inside of options/scales add these (same level as yAxis)
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+        y: {
+          grid: {
+            display: false,
+          },
+        },

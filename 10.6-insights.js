@@ -4,10 +4,10 @@ let delayed;
 
 const FILTERS = [
   "Industry",
+  "CountryOfOrigin",
   "Geographics",
   "Generations",
   "Psychographics",
-  "Matrix",
 ];
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
@@ -20,8 +20,6 @@ const fetchChartDataFromServer = async (chartName, headers = {}) => {
     }
   );
   const processedData = await nonProcessedData.json();
-
-  console.log(processedData);
 
   return processedData;
 };
@@ -67,6 +65,11 @@ const createSimpleBarChart = (
             },
           },
         ],
+        x: {
+          grid: {
+            display: false,
+          },
+        },
       },
       animation: {
         // controls the delay of each point appearing
@@ -124,6 +127,13 @@ const createLineChart = (
         text: titleText,
         fontSize: 16,
       },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+      },
     },
   };
 
@@ -153,6 +163,13 @@ const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
         display: true,
         text: titleText,
         fontSize: 16,
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
       },
       animation: {
         // controls the delay of each point appearing
@@ -323,8 +340,8 @@ const displayBrandsPerIndustryChart = async (queryString = "") => {
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -414,8 +431,8 @@ const displayBrandsPerYearChart = async (queryString = "") => {
     years,
     countedBrands,
     chartColors,
-    "Data range",
-    "Yearly data range"
+    "Brands",
+    "Yearly brands"
   );
 };
 
@@ -447,8 +464,8 @@ const displayBrandsPerLogoTypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -464,8 +481,8 @@ const displayBrandsPerLogoColorCount = async (queryString = "") => {
     colorCountNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
   );
 };
 
@@ -481,8 +498,60 @@ const displayBrandsPerLogoFeature = async (queryString = "") => {
     logoFeaturesNames,
     amountOfCountedBrands,
     chartColors,
-    "Data Range",
-    "Industry data range"
+    "Brands",
+    "Industry brands"
+  );
+};
+
+const displayWordsPerBrandNameChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `wordsperbrandname${queryString}`
+  );
+
+  const { wordsPerBrandNameKeys, amountOfwordsPerBrandName, chartColors } =
+    chartData;
+
+  createSimpleBarChart(
+    "wordsPerBrandName",
+    wordsPerBrandNameKeys,
+    amountOfwordsPerBrandName,
+    chartColors,
+    "Brands",
+    "Words per brand name"
+  );
+};
+
+const displayNameLengthPerBrand = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `namelengthperbrand${queryString}`
+  );
+
+  const { NameLengthsKeys, amountOfLengths, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "nameLengthPerBrand",
+    NameLengthsKeys,
+    amountOfLengths,
+    chartColors,
+    "Brands",
+    "Name length Per brand"
+  );
+};
+
+const displayBrandsPerGeneration = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspergeneration${queryString}`
+  );
+
+  const { GenerationNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerGeneration",
+    GenerationNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per generation"
   );
 };
 
@@ -559,6 +628,9 @@ const displayChartsFunctions = [
   displayBrandsPerLogoTypeChart,
   displayBrandsPerLogoColorCount,
   displayBrandsPerLogoFeature,
+  displayWordsPerBrandNameChart,
+  displayNameLengthPerBrand,
+  displayBrandsPerGeneration,
 ];
 
 const displayAllCharts = () => {
@@ -583,10 +655,11 @@ const getFilteredBrandsCount = async () => {
     // `http://localhost:3000/api/v1/brands/filtered-brands/length`
   );
 
-  // if (res.status !== "200") {
-  //   console.log(res.status);
-  //   return 0;
-  // }
+  if (res.status !== 200) {
+    // make 200 a num not a string
+    console.log(res.status);
+    return 0;
+  }
 
   const { matchedBrands } = await res.json();
 
@@ -596,11 +669,13 @@ const getFilteredBrandsCount = async () => {
 const setFilteredBrandsCountText = async () => {
   const filteredBrandsCount = await getFilteredBrandsCount();
 
-  const filteredBrandsCountText = document.querySelector(
+  const filteredBrandsCountTexts = document.querySelectorAll(
     "#filteredBrandsCountText"
   );
 
-  filteredBrandsCountText.textContent = `Matched ${filteredBrandsCount} Brands`;
+  filteredBrandsCountTexts.forEach((filteredBrandsCountText) => {
+    filteredBrandsCountText.textContent = `${filteredBrandsCount}`;
+  });
 };
 
 // end of extra logic about charts
@@ -617,6 +692,12 @@ function replaceAmbersandWithAnd(originalString) {
     );
     return editedString;
   }
+
+  if (originalString.includes("F & B") !== -1) {
+    const editedString = originalString.replace("F & B", "F and B");
+    return editedString;
+  }
+
   return originalString;
 }
 
