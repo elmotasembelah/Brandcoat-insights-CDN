@@ -12,8 +12,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -51,7 +51,9 @@ const createSimpleBarChart = (
     options: {
       responsice: true,
       maintainAspectRatio: false,
-      legend: { display: false },
+      plugins: {
+        legend: false,
+      },
       title: {
         display: true,
         text: titleText,
@@ -94,6 +96,80 @@ const createSimpleBarChart = (
     },
   });
   // console.log(BARCHART);
+};
+
+const createPieChart = (
+  canvasID,
+  xAxisNames,
+  yAxisData,
+  chartColors,
+  label,
+  titleText
+) => {
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  CANVASES[canvasID] = new Chart(canvasID, {
+    type: "doughnut",
+    data: {
+      labels: xAxisNames,
+      datasets: [
+        {
+          label: label,
+          backgroundColor: chartColors,
+          data: yAxisData,
+        },
+      ],
+    },
+    options: {
+      responsice: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "right" },
+      },
+      title: {
+        display: true,
+        text: titleText,
+        fontSize: 16,
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+        x: {
+          display: false,
+          grid: {
+            display: false,
+          },
+        },
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
+    },
+  });
 };
 
 const createLineChart = (
@@ -555,6 +631,91 @@ const displayBrandsPerGeneration = async (queryString = "") => {
   );
 };
 
+const displayBrandsPerMarketReachChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspermarketreach${queryString}`
+  );
+
+  const { marketReachNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createPieChart(
+    "brandspermarketreach",
+    marketReachNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per Market Reach"
+  );
+};
+
+const displayBrandsPerMarketScopeChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspermarketscope${queryString}`
+  );
+
+  const { marketScopeNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createPieChart(
+    "brandspermarketscope",
+    marketScopeNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per Market Scope"
+  );
+};
+
+const displayBrandsPerBrandStageChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperbrandstage${queryString}`
+  );
+
+  const { brandStagesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsperbrandstage",
+    brandStagesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per Brand Stage"
+  );
+};
+
+const displayBrandsPerCountryChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspercountry${queryString}`
+  );
+
+  const { countriesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createPieChart(
+    "brandspercountry",
+    countriesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per Country"
+  );
+};
+
+const displayBrandsLifeSpanChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandslifespan${queryString}`
+  );
+
+  const { lifeSpans, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandslifespan",
+    lifeSpans,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand lifespan"
+  );
+};
+
 // End of displaying each Chart logic
 
 // start of global filters logic
@@ -631,6 +792,11 @@ const displayChartsFunctions = [
   displayWordsPerBrandNameChart,
   displayNameLengthPerBrand,
   displayBrandsPerGeneration,
+  displayBrandsPerMarketReachChart,
+  displayBrandsPerMarketScopeChart,
+  displayBrandsPerBrandStageChart,
+  displayBrandsPerCountryChart,
+  displayBrandsLifeSpanChart,
 ];
 
 const displayAllCharts = () => {
@@ -651,8 +817,8 @@ const applyGlobalFilters = () => {
 
 const getFilteredBrandsCount = async () => {
   const res = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
-    // `http://localhost:3000/api/v1/brands/filtered-brands/length`
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
+    `http://localhost:3000/api/v1/brands/filtered-brands/length`
   );
 
   if (res.status !== 200) {
