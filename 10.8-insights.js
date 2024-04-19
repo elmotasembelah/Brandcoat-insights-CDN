@@ -98,11 +98,10 @@ const createSimpleBarChart = (
   // console.log(BARCHART);
 };
 
-const createPieChart = (
+const createDoughnutChart = (
   canvasID,
   xAxisNames,
   yAxisData,
-  chartColors,
   label,
   titleText
 ) => {
@@ -117,8 +116,10 @@ const createPieChart = (
       datasets: [
         {
           label: label,
-          backgroundColor: chartColors,
+          backgroundColor: ["#343541", "#6d7a91 ", "#919bad", "#b8bfcb "],
           data: yAxisData,
+          hoverOffset: 7, // controles on hober how much the section will move outside of the chart
+          borderWidth: 0, // can be used to remove the gap between donut sections
         },
       ],
     },
@@ -141,12 +142,6 @@ const createPieChart = (
             },
           },
         ],
-        x: {
-          display: false,
-          grid: {
-            display: false,
-          },
-        },
       },
       animation: {
         // controls the delay of each point appearing
@@ -638,7 +633,7 @@ const displayBrandsPerMarketReachChart = async (queryString = "") => {
 
   const { marketReachNames, amountOfCountedBrands, chartColors } = chartData;
 
-  createPieChart(
+  createDoughnutChart(
     "brandspermarketreach",
     marketReachNames,
     amountOfCountedBrands,
@@ -655,7 +650,7 @@ const displayBrandsPerMarketScopeChart = async (queryString = "") => {
 
   const { marketScopeNames, amountOfCountedBrands, chartColors } = chartData;
 
-  createPieChart(
+  createDoughnutChart(
     "brandspermarketscope",
     marketScopeNames,
     amountOfCountedBrands,
@@ -689,7 +684,7 @@ const displayBrandsPerCountryChart = async (queryString = "") => {
 
   const { countriesNames, amountOfCountedBrands, chartColors } = chartData;
 
-  createPieChart(
+  createDoughnutChart(
     "brandspercountry",
     countriesNames,
     amountOfCountedBrands,
