@@ -98,6 +98,80 @@ const createSimpleBarChart = (
   });
   // console.log(BARCHART);
 };
+const createHorizentalBarChart = (
+  canvasID,
+  xAxisNames,
+  yAxisData,
+  chartColors,
+  label,
+  titleText
+) => {
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  CANVASES[canvasID] = new Chart(canvasID, {
+    type: "bar",
+    data: {
+      labels: xAxisNames,
+      datasets: [
+        {
+          label: label,
+          backgroundColor: chartColors,
+          data: yAxisData,
+        },
+      ],
+    },
+    options: {
+      indexAxis: "y",
+      responsice: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: false,
+      },
+      title: {
+        display: true,
+        text: titleText,
+        fontSize: 16,
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
+    },
+  });
+  // console.log(BARCHART);
+};
 
 const createDoughnutChart = (
   canvasID,
@@ -411,7 +485,13 @@ const displayBrandsPerIndustryChart = async (queryString = "") => {
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "Brands",
+    "Industry brands"
+  );
+  createHorizentalBarChart(
+    "brandsPerIndusryHori",
+    industriesNames,
+    amountOfCountedBrands,
+    chartColors,
     "Industry brands"
   );
 };
@@ -424,6 +504,14 @@ const displayColorUsageChart = async (queryString = "") => {
 
   createSimpleBarChart(
     "colorUsage",
+    countedColorsNames,
+    countedColorsValues,
+    histogramColors,
+    "Color analysis",
+    `Color analysis `
+  );
+  createHorizentalBarChart(
+    "colorUsageHori",
     countedColorsNames,
     countedColorsValues,
     histogramColors,
@@ -447,6 +535,14 @@ const displayLogoChangeFrequencyChart = async (queryString = "") => {
     "Brands",
     `Rebranding cycles analysis`
   );
+  createHorizentalBarChart(
+    "logoChangeFrequencyHori",
+    countedYearsKeys,
+    countedYearsValues,
+    chartColor,
+    "Brands",
+    `Rebranding cycles analysis`
+  );
 };
 
 const displayBrandsPerLogoDesignIndustry = async (queryString = "") => {
@@ -462,6 +558,14 @@ const displayBrandsPerLogoDesignIndustry = async (queryString = "") => {
 
   createSimpleBarChart(
     "brandsPerLogoDesign",
+    countedDesignApprouchesKeys,
+    countedDesignApprouchesValues,
+    chartColor,
+    "Amount of logo type usage",
+    `Logo type trend analysis`
+  );
+  createHorizentalBarChart(
+    "brandsPerLogoDesignHori",
     countedDesignApprouchesKeys,
     countedDesignApprouchesValues,
     chartColor,
@@ -502,7 +606,13 @@ const displayBrandsPerYearChart = async (queryString = "") => {
     years,
     countedBrands,
     chartColors,
-    "Brands",
+    "Yearly brands"
+  );
+  createHorizentalBarChart(
+    "brandsPerYearHori",
+    years,
+    countedBrands,
+    chartColors,
     "Yearly brands"
   );
 };
@@ -538,6 +648,14 @@ const displayBrandsPerLogoTypeChart = async (queryString = "") => {
     "Brands",
     "Industry brands"
   );
+  createHorizentalBarChart(
+    "brandsPerLogoTypeHori",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Industry brands"
+  );
 };
 
 const displayBrandsPerLogoColorCount = async (queryString = "") => {
@@ -555,6 +673,14 @@ const displayBrandsPerLogoColorCount = async (queryString = "") => {
     "Brands",
     "Industry brands"
   );
+  createHorizentalBarChart(
+    "brandsPerLogoColorCountHori",
+    colorCountNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Industry brands"
+  );
 };
 
 const displayBrandsPerLogoFeature = async (queryString = "") => {
@@ -566,6 +692,14 @@ const displayBrandsPerLogoFeature = async (queryString = "") => {
 
   createSimpleBarChart(
     "brandsPerLogoFeature",
+    logoFeaturesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Industry brands"
+  );
+  createHorizentalBarChart(
+    "brandsPerLogoFeatureHori",
     logoFeaturesNames,
     amountOfCountedBrands,
     chartColors,
@@ -590,6 +724,14 @@ const displayWordsPerBrandNameChart = async (queryString = "") => {
     "Brands",
     "Words per brand name"
   );
+  createHorizentalBarChart(
+    "wordsPerBrandNameHori",
+    wordsPerBrandNameKeys,
+    amountOfwordsPerBrandName,
+    chartColors,
+    "Brands",
+    "Words per brand name"
+  );
 };
 
 const displayNameLengthPerBrand = async (queryString = "") => {
@@ -607,6 +749,14 @@ const displayNameLengthPerBrand = async (queryString = "") => {
     "Brands",
     "Name length Per brand"
   );
+  createHorizentalBarChart(
+    "nameLengthPerBrandHori",
+    NameLengthsKeys,
+    amountOfLengths,
+    chartColors,
+    "Brands",
+    "Name length Per brand"
+  );
 };
 
 const displayBrandsPerGeneration = async (queryString = "") => {
@@ -618,6 +768,14 @@ const displayBrandsPerGeneration = async (queryString = "") => {
 
   createSimpleBarChart(
     "brandsPerGeneration",
+    GenerationNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per generation"
+  );
+  createHorizentalBarChart(
+    "brandsPerGenerationHori",
     GenerationNames,
     amountOfCountedBrands,
     chartColors,
@@ -675,6 +833,14 @@ const displayBrandsPerBrandStageChart = async (queryString = "") => {
     "Brands",
     "Brand per Brand Stage"
   );
+  createHorizentalBarChart(
+    "brandsperbrandstageHori",
+    brandStagesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per Brand Stage"
+  );
 };
 
 const displayBrandsPerCountryChart = async (queryString = "") => {
@@ -709,6 +875,14 @@ const displayBrandsLifeSpanChart = async (queryString = "") => {
     "Brands",
     "Brand lifespan"
   );
+  createHorizentalBarChart(
+    "brandslifespanHori",
+    lifeSpans,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand lifespan"
+  );
 };
 
 const displayBrandsLifeStyleChart = async (queryString = "") => {
@@ -725,6 +899,13 @@ const displayBrandsLifeStyleChart = async (queryString = "") => {
     chartColors,
     "Brand lifeStyle"
   );
+  createHorizentalBarChart(
+    "brandsperlifestyleHori",
+    lifeStyleNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brand lifeStyle"
+  );
 };
 
 const displayBrandsAgeChart = async (queryString = "") => {
@@ -733,7 +914,14 @@ const displayBrandsAgeChart = async (queryString = "") => {
   const { foundedYears, amountOfCountedBrands, chartColors } = chartData;
 
   createSimpleBarChart(
-    "brandsage",
+    "brandsAge",
+    foundedYears,
+    amountOfCountedBrands,
+    chartColors,
+    "brand age"
+  );
+  createHorizentalBarChart(
+    "brandsAgeHori",
     foundedYears,
     amountOfCountedBrands,
     chartColors,
