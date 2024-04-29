@@ -12,8 +12,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -49,6 +49,7 @@ const createSimpleBarChart = (
       ],
     },
     options: {
+      // indexAxis: "y",
       responsice: true,
       maintainAspectRatio: false,
       plugins: {
@@ -399,7 +400,6 @@ const createPolarAreaChart = (canvasID, labels, dataSets) => {
 // Start of displaying each chart logic
 
 const displayBrandsPerIndustryChart = async (queryString = "") => {
-  // chartData = await fetchChartDataFromServer(`brandsperindustry`);
   const chartData = await fetchChartDataFromServer(
     `brandsperindustry${queryString}`
   );
@@ -711,6 +711,36 @@ const displayBrandsLifeSpanChart = async (queryString = "") => {
   );
 };
 
+const displayBrandsLifeStyleChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperlifestyle${queryString}`
+  );
+
+  const { lifeStyleNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsperlifestyle",
+    lifeStyleNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brand lifeStyle"
+  );
+};
+
+const displayBrandsAgeChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(`brandsage${queryString}`);
+
+  const { foundedYears, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsage",
+    foundedYears,
+    amountOfCountedBrands,
+    chartColors,
+    "brand age"
+  );
+};
+
 // End of displaying each Chart logic
 
 // start of global filters logic
@@ -792,6 +822,8 @@ const displayChartsFunctions = [
   displayBrandsPerBrandStageChart,
   displayBrandsPerCountryChart,
   displayBrandsLifeSpanChart,
+  displayBrandsLifeStyleChart,
+  displayBrandsAgeChart,
 ];
 
 const displayAllCharts = () => {
@@ -812,8 +844,8 @@ const applyGlobalFilters = () => {
 
 const getFilteredBrandsCount = async () => {
   const res = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
-    // `http://localhost:3000/api/v1/brands/filtered-brands/length`
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/length`
+    `http://localhost:3000/api/v1/brands/filtered-brands/length`
   );
 
   if (res.status !== 200) {
@@ -841,8 +873,8 @@ const setFilteredBrandsCountText = async () => {
 
 const getFilteredBrandsCitiesCount = async () => {
   const res = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/cities`
-    // `http://localhost:3000/api/v1/brands/filtered-brands/cities`
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/brands/filtered-brands/cities`
+    `http://localhost:3000/api/v1/brands/filtered-brands/cities`
   );
   if (res.status !== 200) {
     // make 200 a num not a string
