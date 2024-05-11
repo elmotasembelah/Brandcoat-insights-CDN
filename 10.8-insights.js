@@ -8,6 +8,7 @@ const FILTERS = [
   "Geographics",
   "Generations",
   "Psychographics",
+  "Timeframe",
 ];
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
@@ -49,7 +50,6 @@ const createSimpleBarChart = (
       ],
     },
     options: {
-      // indexAxis: "y",
       responsice: true,
       maintainAspectRatio: false,
       plugins: {
@@ -170,7 +170,102 @@ const createHorizentalBarChart = (
       },
     },
   });
-  // console.log(BARCHART);
+};
+
+const createHistogramChart = (
+  canvasID,
+  data,
+  chartColors,
+  label,
+  xAxisTitle,
+  yAxisTitle
+) => {
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  CANVASES[canvasID] = new Chart(canvasID, {
+    type: "bar",
+    data: {
+      datasets: [
+        {
+          label: label,
+          backgroundColor: chartColors,
+          data: data,
+          borderWidth: 1,
+          barPercentage: 1, // to remove gaps between bars
+          categoryPercentage: 1, // to remove gaps between bars
+        },
+      ],
+    },
+    options: {
+      responsice: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: false,
+        tooltip: {
+          callbacks: {
+            title: (items) => {
+              const item = items[0];
+              const x = item.parsed.x;
+              const min = x - 0.5;
+              const max = x + 0.5;
+              return `${xAxisTitle} ${min} - ${max}`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          type: "linear",
+          offset: false,
+          grid: {
+            offset: false,
+          },
+          ticks: {
+            stepSize: 5,
+          },
+          title: {
+            display: true,
+            text: xAxisTitle,
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: yAxisTitle,
+          },
+        },
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+      animation: {
+        // controls the delay of each point appearing
+        onComplete: () => {
+          delayed = true;
+        },
+        delay: (context) => {
+          let delay = 0;
+          let delaySpeedMultiplier = 200;
+          if (
+            context.type === "data" &&
+            context.mode === "default" &&
+            !delayed
+          ) {
+            delay =
+              context.dataIndex * delaySpeedMultiplier +
+              context.datasetIndex * 100;
+          }
+          return delay;
+        },
+      },
+    },
+  });
 };
 
 const createDoughnutChart = (
@@ -543,6 +638,20 @@ const displayLogoChangeFrequencyChart = async (queryString = "") => {
     "Brands",
     `Rebranding cycles analysis`
   );
+
+  const cartesianFormatedData = formatDataIntoCartesianData(
+    countedYearsKeys,
+    countedYearsValues
+  );
+
+  createHistogramChart(
+    "logoChangeFrequencyHistogram",
+    cartesianFormatedData,
+    chartColor,
+    "brands",
+    "Years",
+    "Brands"
+  );
 };
 
 const displayBrandsPerLogoDesignIndustry = async (queryString = "") => {
@@ -757,6 +866,20 @@ const displayNameLengthPerBrand = async (queryString = "") => {
     "Brands",
     "Name length Per brand"
   );
+
+  const cartesianFormatedData = formatDataIntoCartesianData(
+    NameLengthsKeys,
+    amountOfLengths
+  );
+
+  createHistogramChart(
+    "nameLengthPerBrandHistogram",
+    cartesianFormatedData,
+    chartColors,
+    "brands",
+    "Characters",
+    "Brands"
+  );
 };
 
 const displayBrandsPerGeneration = async (queryString = "") => {
@@ -883,6 +1006,20 @@ const displayBrandsLifeSpanChart = async (queryString = "") => {
     "Brands",
     "Brand lifespan"
   );
+
+  const cartesianFormatedData = formatDataIntoCartesianData(
+    lifeSpans,
+    amountOfCountedBrands
+  );
+
+  createHistogramChart(
+    "brandslifespanHistogram",
+    cartesianFormatedData,
+    chartColors,
+    "brands",
+    "Years",
+    "Brands"
+  );
 };
 
 const displayBrandsLifeStyleChart = async (queryString = "") => {
@@ -911,21 +1048,37 @@ const displayBrandsLifeStyleChart = async (queryString = "") => {
 const displayBrandsAgeChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(`brandsage${queryString}`);
 
-  const { foundedYears, amountOfCountedBrands, chartColors } = chartData;
+  const { brandsAges, amountOfCountedBrands, chartColors } = chartData;
+
+  brandsAges.pop();
 
   createSimpleBarChart(
     "brandsAge",
-    foundedYears,
+    brandsAges,
     amountOfCountedBrands,
     chartColors,
     "brand age"
   );
   createHorizentalBarChart(
     "brandsAgeHori",
-    foundedYears,
+    brandsAges,
     amountOfCountedBrands,
     chartColors,
     "brand age"
+  );
+
+  const cartesianFormatedData = formatDataIntoCartesianData(
+    brandsAges,
+    amountOfCountedBrands
+  );
+
+  createHistogramChart(
+    "brandsAgeHistogram",
+    cartesianFormatedData,
+    chartColors,
+    "brands",
+    "Years",
+    "Brands"
   );
 };
 
@@ -1132,6 +1285,15 @@ function replaceAmbersandWithAnd(originalString) {
 
   return originalString;
 }
+
+const formatDataIntoCartesianData = (arrayOfXValues, arrayOfYValues) => {
+  const formattedData = arrayOfXValues.map((xValue, index) => ({
+    x: parseFloat(xValue) + 0.5,
+    y: arrayOfYValues[index],
+  }));
+
+  return formattedData;
+};
 
 // End of utility function
 
