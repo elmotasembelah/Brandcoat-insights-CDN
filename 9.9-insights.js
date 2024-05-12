@@ -918,7 +918,6 @@ const displayBrandsPerMarketReachChart = async (queryString = "") => {
     "brandspermarketreach",
     marketReachNames,
     amountOfCountedBrands,
-    chartColors,
     "Brands",
     "Brand per Market Reach"
   );
@@ -935,7 +934,6 @@ const displayBrandsPerMarketScopeChart = async (queryString = "") => {
     "brandspermarketscope",
     marketScopeNames,
     amountOfCountedBrands,
-    chartColors,
     "Brands",
     "Brand per Market Scope"
   );
@@ -977,7 +975,6 @@ const displayBrandsPerCountryChart = async (queryString = "") => {
     "brandspercountry",
     countriesNames,
     amountOfCountedBrands,
-    chartColors,
     "Brands",
     "Brand per Country"
   );
