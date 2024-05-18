@@ -580,14 +580,14 @@ const displayBrandsPerIndustryChart = async (queryString = "") => {
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "Industry brands"
+    "brands"
   );
   createHorizentalBarChart(
     "brandsPerIndusryHori",
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "Industry brands"
+    "brands"
   );
 };
 
@@ -1079,6 +1079,224 @@ const displayBrandsAgeChart = async (queryString = "") => {
   );
 };
 
+const displayDesignPhilosophyUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `designphilosophyusageperyear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "designPhilosophyUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Design philosophy trend analysis"
+  );
+};
+const displayTypefaceClassUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `typefaceClassUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "typefaceClassUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Typeface Class trend analysis"
+  );
+};
+
+const displayTypefaceSourcingUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `typefaceSourcingUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "typefaceSourcingUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Typeface sourcing trend analysis"
+  );
+};
+
+const displayTypographyTrendsUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `typographyTrendsUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "typographyTrendsUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Typography Trends trend analysis"
+  );
+};
+
+const displayCulturalExpressionsUsagePerYearChart = async (
+  queryString = ""
+) => {
+  const chartData = await fetchChartDataFromServer(
+    `culturalExpressionsUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "culturalExpressionsUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Cultural Expressions trend analysis"
+  );
+};
+
+const displayColorTemperatureUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `colorTemperatureUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "colorTemperatureUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Color Temperature trend analysis"
+  );
+};
+
+const displayNameTypeUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `nameTypeUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "nameTypeUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Name type trend analysis"
+  );
+};
+const displayLogoFeaturesUsagePerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `logoFeaturesUsagePerYear${queryString}`
+  );
+
+  const { years, datasets } = chartData;
+
+  createMultiLineChart(
+    "logoFeaturesUsagePerYear",
+    years,
+    datasets,
+    // "Amount of usage",
+    "Logo features trend analysis"
+  );
+};
+
+const displayBrandsPerArtMovementChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperartmovement${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsperartmovement",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors
+  );
+};
+
+const displayBrandsPerBrandArchtypeChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperbrandarchtype${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerBrandArchtype",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors
+  );
+};
+
+const displayBrandsPerColorPsychologyChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspercolorpsychology${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerColorPsychology",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors
+  );
+};
+
+const displayBrandsPerColorTemperatureChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspercolortemperature${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerColorTemperature",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors
+  );
+};
+
+const displayBrandsPerBusinessModelChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperbusinessmodel${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerBusinessModel",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors
+  );
+};
+
+const displayBrandsPerTaglineTypeChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspertaglinetype${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerTaglineType",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors
+  );
+};
+
 // End of displaying each Chart logic
 
 // start of global filters logic
@@ -1162,6 +1380,20 @@ const displayChartsFunctions = [
   displayBrandsLifeSpanChart,
   displayBrandsLifeStyleChart,
   displayBrandsAgeChart,
+  displayDesignPhilosophyUsagePerYearChart,
+  displayTypefaceClassUsagePerYearChart,
+  displayTypefaceSourcingUsagePerYearChart,
+  displayTypographyTrendsUsagePerYearChart,
+  displayCulturalExpressionsUsagePerYearChart,
+  displayColorTemperatureUsagePerYearChart,
+  displayNameTypeUsagePerYearChart,
+  displayLogoFeaturesUsagePerYearChart,
+  displayBrandsPerArtMovementChart,
+  displayBrandsPerBrandArchtypeChart,
+  displayBrandsPerColorPsychologyChart,
+  displayBrandsPerColorTemperatureChart,
+  displayBrandsPerBusinessModelChart,
+  displayBrandsPerTaglineTypeChart,
 ];
 
 const displayAllCharts = () => {
