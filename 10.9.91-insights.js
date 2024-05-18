@@ -13,8 +13,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -1218,7 +1218,8 @@ const displayBrandsPerArtMovementChart = async (queryString = "") => {
     "brandsperartmovement",
     logoTypesNames,
     amountOfCountedBrands,
-    chartColors
+    chartColors,
+    "brands"
   );
 };
 
@@ -1233,7 +1234,8 @@ const displayBrandsPerBrandArchtypeChart = async (queryString = "") => {
     "brandsPerBrandArchtype",
     logoTypesNames,
     amountOfCountedBrands,
-    chartColors
+    chartColors,
+    "brands"
   );
 };
 
@@ -1248,7 +1250,8 @@ const displayBrandsPerColorPsychologyChart = async (queryString = "") => {
     "brandsPerColorPsychology",
     logoTypesNames,
     amountOfCountedBrands,
-    chartColors
+    chartColors,
+    "brands"
   );
 };
 
@@ -1263,7 +1266,8 @@ const displayBrandsPerColorTemperatureChart = async (queryString = "") => {
     "brandsPerColorTemperature",
     logoTypesNames,
     amountOfCountedBrands,
-    chartColors
+    chartColors,
+    "brands"
   );
 };
 
@@ -1278,7 +1282,23 @@ const displayBrandsPerBusinessModelChart = async (queryString = "") => {
     "brandsPerBusinessModel",
     logoTypesNames,
     amountOfCountedBrands,
-    chartColors
+    chartColors,
+    "brands"
+  );
+};
+const displayBrandsPerDomainTypeChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperdomaintype${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerDomainType",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
   );
 };
 
@@ -1293,7 +1313,8 @@ const displayBrandsPerTaglineTypeChart = async (queryString = "") => {
     "brandsPerTaglineType",
     logoTypesNames,
     amountOfCountedBrands,
-    chartColors
+    chartColors,
+    "brands"
   );
 };
 
@@ -1394,6 +1415,7 @@ const displayChartsFunctions = [
   displayBrandsPerColorTemperatureChart,
   displayBrandsPerBusinessModelChart,
   displayBrandsPerTaglineTypeChart,
+  displayBrandsPerDomainTypeChart,
 ];
 
 const displayAllCharts = () => {
