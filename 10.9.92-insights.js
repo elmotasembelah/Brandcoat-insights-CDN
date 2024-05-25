@@ -33,11 +33,7 @@ const createSimpleBarChart = (
   label,
   titleText
 ) => {
-  try {
-    CANVASES[canvasID].destroy();
-  } catch (error) {}
-
-  CANVASES[canvasID] = new Chart(canvasID, {
+  const config = {
     type: "bar",
     data: {
       labels: xAxisNames,
@@ -95,8 +91,15 @@ const createSimpleBarChart = (
         },
       },
     },
-  });
-  // console.log(BARCHART);
+  };
+
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  try {
+    CANVASES[canvasID] = new Chart(canvasID, config);
+  } catch (error) {}
 };
 const createHorizentalBarChart = (
   canvasID,
@@ -106,11 +109,7 @@ const createHorizentalBarChart = (
   label,
   titleText
 ) => {
-  try {
-    CANVASES[canvasID].destroy();
-  } catch (error) {}
-
-  CANVASES[canvasID] = new Chart(canvasID, {
+  const config = {
     type: "bar",
     data: {
       labels: xAxisNames,
@@ -169,7 +168,15 @@ const createHorizentalBarChart = (
         },
       },
     },
-  });
+  };
+
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  try {
+    CANVASES[canvasID] = new Chart(canvasID, config);
+  } catch (error) {}
 };
 
 const createHistogramChart = (
@@ -180,11 +187,7 @@ const createHistogramChart = (
   xAxisTitle,
   yAxisTitle
 ) => {
-  try {
-    CANVASES[canvasID].destroy();
-  } catch (error) {}
-
-  CANVASES[canvasID] = new Chart(canvasID, {
+  const config = {
     type: "bar",
     data: {
       datasets: [
@@ -265,7 +268,15 @@ const createHistogramChart = (
         },
       },
     },
-  });
+  };
+
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  try {
+    CANVASES[canvasID] = new Chart(canvasID, config);
+  } catch (error) {}
 };
 
 const createDoughnutChart = (
@@ -275,11 +286,7 @@ const createDoughnutChart = (
   label,
   titleText
 ) => {
-  try {
-    CANVASES[canvasID].destroy();
-  } catch (error) {}
-
-  CANVASES[canvasID] = new Chart(canvasID, {
+  const config = {
     type: "doughnut",
     data: {
       labels: xAxisNames,
@@ -334,7 +341,15 @@ const createDoughnutChart = (
         },
       },
     },
-  });
+  };
+
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  try {
+    CANVASES[canvasID] = new Chart(canvasID, config);
+  } catch (error) {}
 };
 
 const createLineChart = (
@@ -382,8 +397,11 @@ const createLineChart = (
     CANVASES[canvasID].destroy();
   } catch (error) {}
 
-  CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
+  try {
+    CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
+  } catch (error) {}
 };
+
 const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
   // TODO: this should be moved and used in the new datasets prep code which is being moved from the backend
   datasets.forEach((dataset) => {
@@ -439,17 +457,14 @@ const createMultiLineChart = (canvasID, xAxisNames, datasets, titleText) => {
     CANVASES[canvasID].destroy();
   } catch (error) {}
 
-  CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
+  try {
+    CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
+  } catch (error) {}
 };
 
 const createRadarChart = (canvasID, labels, dataSets) => {
   dataSets = prepareRadarChartDataSets(dataSets);
-
-  try {
-    CANVASES[canvasID].destroy();
-  } catch (error) {}
-
-  CANVASES[canvasID] = new Chart(canvasID, {
+  const config = {
     type: "radar",
     data: {
       labels: labels,
@@ -492,7 +507,15 @@ const createRadarChart = (canvasID, labels, dataSets) => {
         },
       },
     },
-  });
+  };
+
+  try {
+    CANVASES[canvasID].destroy();
+  } catch (error) {}
+
+  try {
+    CANVASES[canvasID] = new Chart(canvasID, config);
+  } catch (error) {}
 };
 
 const prepareRadarChartDataSets = (dataSets) => {
@@ -561,7 +584,9 @@ const createPolarAreaChart = (canvasID, labels, dataSets) => {
     CANVASES[canvasID].destroy();
   } catch (error) {}
 
-  CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
+  try {
+    CANVASES[canvasID] = new Chart(document.getElementById(canvasID), config);
+  } catch (error) {}
 };
 
 // End of Chart creationg logic
@@ -670,7 +695,6 @@ const displayBrandsPerLogoDesignIndustry = async (queryString = "") => {
     countedDesignApprouchesKeys,
     countedDesignApprouchesValues,
     chartColor,
-    "Amount of logo type usage",
     `Logo type trend analysis`
   );
   createHorizentalBarChart(
@@ -678,7 +702,6 @@ const displayBrandsPerLogoDesignIndustry = async (queryString = "") => {
     countedDesignApprouchesKeys,
     countedDesignApprouchesValues,
     chartColor,
-    "Amount of logo type usage",
     `Logo type trend analysis`
   );
 };
@@ -1318,6 +1341,101 @@ const displayBrandsPerTaglineTypeChart = async (queryString = "") => {
   );
 };
 
+const displayBrandsPerDesignPhilosophyChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperdesignphilosophy${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerDesignPhilosophy",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
+
+const displayBrandsPerCulturalExpressionChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperculturalexpression${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerCulturalExpression",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
+
+const displayBrandsPerTypefaceClassChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspertypefaceclass${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerTypefaceClass",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
+const displayBrandsPerTypefaceSourcingChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspertypefacesourcing${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerTypefaceSourcing",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
+
+const displayBrandsPerTypographyTrendChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspertypographytrend${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerTypographyTrend",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
+
+const displayBrandsPerNameLanguageChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspernamelanguage${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerNameLanguage",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
+
 // End of displaying each Chart logic
 
 // start of global filters logic
@@ -1414,8 +1532,14 @@ const displayChartsFunctions = [
   displayBrandsPerColorPsychologyChart,
   displayBrandsPerColorTemperatureChart,
   displayBrandsPerBusinessModelChart,
-  displayBrandsPerTaglineTypeChart,
   displayBrandsPerDomainTypeChart,
+  displayBrandsPerTaglineTypeChart,
+  displayBrandsPerDesignPhilosophyChart,
+  displayBrandsPerCulturalExpressionChart,
+  displayBrandsPerTypefaceClassChart,
+  displayBrandsPerTypefaceSourcingChart,
+  displayBrandsPerTypographyTrendChart,
+  displayBrandsPerNameLanguageChart,
 ];
 
 const displayAllCharts = () => {
