@@ -1435,6 +1435,21 @@ const displayBrandsPerNameLanguageChart = async (queryString = "") => {
     "brands"
   );
 };
+const displayBrandsPerNameTypeChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandspernametype${queryString}`
+  );
+
+  const { logoTypesNames, amountOfCountedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerNameType",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "brands"
+  );
+};
 
 // End of displaying each Chart logic
 
@@ -1540,6 +1555,7 @@ const displayChartsFunctions = [
   displayBrandsPerTypefaceSourcingChart,
   displayBrandsPerTypographyTrendChart,
   displayBrandsPerNameLanguageChart,
+  displayBrandsPerNameTypeChart,
 ];
 
 const displayAllCharts = () => {
