@@ -13,8 +13,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -284,7 +284,8 @@ const createDoughnutChart = (
   xAxisNames,
   yAxisData,
   label,
-  titleText
+  titleText,
+  backgroundColors = ["#343541", "#6d7a91 ", "#919bad", "#b8bfcb"]
 ) => {
   const config = {
     type: "doughnut",
@@ -293,7 +294,7 @@ const createDoughnutChart = (
       datasets: [
         {
           label: label,
-          backgroundColor: ["#343541", "#6d7a91 ", "#919bad", "#b8bfcb "],
+          backgroundColor: backgroundColors,
           data: yAxisData,
           hoverOffset: 7, // controles on hober how much the section will move outside of the chart
           borderWidth: 0, // can be used to remove the gap between donut sections
@@ -605,14 +606,14 @@ const displayBrandsPerIndustryChart = async (queryString = "") => {
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
   createHorizentalBarChart(
     "brandsPerIndusryHori",
     industriesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -627,16 +628,16 @@ const displayColorUsageChart = async (queryString = "") => {
     countedColorsNames,
     countedColorsValues,
     histogramColors,
-    "Color analysis",
-    `Color analysis `
+    "Brands",
+    `brands `
   );
   createHorizentalBarChart(
     "colorUsageHori",
     countedColorsNames,
     countedColorsValues,
     histogramColors,
-    "Color analysis",
-    `Color analysis `
+    "Brands",
+    `brands `
   );
 };
 
@@ -673,7 +674,7 @@ const displayLogoChangeFrequencyChart = async (queryString = "") => {
     "logoChangeFrequencyHistogram",
     cartesianFormatedData,
     chartColor,
-    "brands",
+    "Brands",
     "Years",
     "Brands"
   );
@@ -738,14 +739,14 @@ const displayBrandsPerYearChart = async (queryString = "") => {
     years,
     countedBrands,
     chartColors,
-    "Yearly brands"
+    "Brands"
   );
   createHorizentalBarChart(
     "brandsPerYearHori",
     years,
     countedBrands,
     chartColors,
-    "Yearly brands"
+    "Brands"
   );
 };
 
@@ -761,6 +762,14 @@ const displayLogoTypeUsagePerYearChart = async (queryString = "") => {
     years,
     datasets,
     // "Amount of usage",
+    "Logo type trend analysis"
+  );
+
+  createDoughnutChart(
+    "logoTypeUsagePerYearDoughnut",
+    years,
+    datasets,
+    "Amount of usage",
     "Logo type trend analysis"
   );
 };
@@ -782,6 +791,15 @@ const displayBrandsPerLogoTypeChart = async (queryString = "") => {
   );
   createHorizentalBarChart(
     "brandsPerLogoTypeHori",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Industry brands"
+  );
+
+  createDoughnutChart(
+    "brandsPerLogoTypeDoughnut",
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
@@ -899,7 +917,7 @@ const displayNameLengthPerBrand = async (queryString = "") => {
     "nameLengthPerBrandHistogram",
     cartesianFormatedData,
     chartColors,
-    "brands",
+    "Brands",
     "Characters",
     "Brands"
   );
@@ -922,6 +940,15 @@ const displayBrandsPerGeneration = async (queryString = "") => {
   );
   createHorizentalBarChart(
     "brandsPerGenerationHori",
+    GenerationNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands",
+    "Brand per generation"
+  );
+
+  createDoughnutChart(
+    "brandsPerGenerationDoughnut",
     GenerationNames,
     amountOfCountedBrands,
     chartColors,
@@ -1038,7 +1065,7 @@ const displayBrandsLifeSpanChart = async (queryString = "") => {
     chartColors,
     "brands",
     "Years",
-    "Brands"
+    "brands"
   );
 };
 
@@ -1054,14 +1081,14 @@ const displayBrandsLifeStyleChart = async (queryString = "") => {
     lifeStyleNames,
     amountOfCountedBrands,
     chartColors,
-    "Brand lifeStyle"
+    "Brands"
   );
   createHorizentalBarChart(
     "brandsperlifestyleHori",
     lifeStyleNames,
     amountOfCountedBrands,
     chartColors,
-    "Brand lifeStyle"
+    "Brands"
   );
 };
 
@@ -1096,7 +1123,7 @@ const displayBrandsAgeChart = async (queryString = "") => {
     "brandsAgeHistogram",
     cartesianFormatedData,
     chartColors,
-    "brands",
+    "Brands",
     "Years",
     "Brands"
   );
@@ -1242,7 +1269,7 @@ const displayBrandsPerArtMovementChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1258,7 +1285,7 @@ const displayBrandsPerBrandArchtypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1274,7 +1301,7 @@ const displayBrandsPerColorPsychologyChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1290,7 +1317,16 @@ const displayBrandsPerColorTemperatureChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
+  );
+
+  createDoughnutChart(
+    "brandsPerColorTemperatureDoughnut",
+    logoTypesNames,
+    amountOfCountedBrands,
+    "Brands",
+    "",
+    ["#fa9128", "#14bae0", "#919bad", "#8c64aa"]
   );
 };
 
@@ -1306,7 +1342,7 @@ const displayBrandsPerBusinessModelChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 const displayBrandsPerDomainTypeChart = async (queryString = "") => {
@@ -1321,7 +1357,14 @@ const displayBrandsPerDomainTypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
+  );
+  createDoughnutChart(
+    "brandsPerDomainTypeDoughnut",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands"
   );
 };
 
@@ -1337,7 +1380,7 @@ const displayBrandsPerTaglineTypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1353,7 +1396,7 @@ const displayBrandsPerDesignPhilosophyChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1369,7 +1412,7 @@ const displayBrandsPerCulturalExpressionChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1385,7 +1428,7 @@ const displayBrandsPerTypefaceClassChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 const displayBrandsPerTypefaceSourcingChart = async (queryString = "") => {
@@ -1400,7 +1443,7 @@ const displayBrandsPerTypefaceSourcingChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1416,7 +1459,7 @@ const displayBrandsPerTypographyTrendChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
@@ -1432,7 +1475,15 @@ const displayBrandsPerNameLanguageChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
+  );
+
+  createDoughnutChart(
+    "brandsPerNameLanguageDoughnut",
+    logoTypesNames,
+    amountOfCountedBrands,
+    chartColors,
+    "Brands"
   );
 };
 const displayBrandsPerNameTypeChart = async (queryString = "") => {
@@ -1447,7 +1498,7 @@ const displayBrandsPerNameTypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "brands"
+    "Brands"
   );
 };
 
