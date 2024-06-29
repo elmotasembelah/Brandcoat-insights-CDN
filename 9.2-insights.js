@@ -803,8 +803,7 @@ const displayBrandsPerLogoTypeChart = async (queryString = "") => {
     logoTypesNames,
     amountOfCountedBrands,
     chartColors,
-    "Brands",
-    "Industry brands"
+    "Brands"
   );
 };
 
@@ -952,8 +951,7 @@ const displayBrandsPerGeneration = async (queryString = "") => {
     GenerationNames,
     amountOfCountedBrands,
     chartColors,
-    "Brands",
-    "Brand per generation"
+    "Brands"
   );
 };
 
