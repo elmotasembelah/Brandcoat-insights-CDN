@@ -9,6 +9,7 @@ const FILTERS = [
   "Generations",
   "Psychographics",
   "Timeframe",
+  "Studios",
 ];
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
