@@ -14,8 +14,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    // `http://localhost:3000/api/v1/charts/${chartName}`,
+    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
@@ -102,6 +102,7 @@ const createSimpleBarChart = (
     CANVASES[canvasID] = new Chart(canvasID, config);
   } catch (error) {}
 };
+
 const createHorizentalBarChart = (
   canvasID,
   xAxisNames,
@@ -728,29 +729,6 @@ const displayElementsUsageChartv2 = async (queryString = "") => {
   createPolarAreaChart("elementsUsageV2", labels, dataSets);
 };
 
-const displayBrandsPerYearChart = async (queryString = "") => {
-  const chartData = await fetchChartDataFromServer(
-    `brandsperyear${queryString}`
-  );
-
-  const { years, countedBrands, chartColors } = chartData;
-
-  createSimpleBarChart(
-    "brandsPerYear",
-    years,
-    countedBrands,
-    chartColors,
-    "Brands"
-  );
-  createHorizentalBarChart(
-    "brandsPerYearHori",
-    years,
-    countedBrands,
-    chartColors,
-    "Brands"
-  );
-};
-
 const displayLogoTypeUsagePerYearChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(
     `logodesignusageperyear${queryString}`
@@ -772,6 +750,29 @@ const displayLogoTypeUsagePerYearChart = async (queryString = "") => {
     datasets,
     "Amount of usage",
     "Logo type trend analysis"
+  );
+};
+
+const displayBrandsPerYearChart = async (queryString = "") => {
+  const chartData = await fetchChartDataFromServer(
+    `brandsperyear${queryString}`
+  );
+
+  const { years, countedBrands, chartColors } = chartData;
+
+  createSimpleBarChart(
+    "brandsPerYear",
+    years,
+    countedBrands,
+    chartColors,
+    "Brands"
+  );
+  createHorizentalBarChart(
+    "brandsPerYearHori",
+    years,
+    countedBrands,
+    chartColors,
+    "Brands"
   );
 };
 
@@ -1013,6 +1014,8 @@ const displayBrandsPerBrandStageChart = async (queryString = "") => {
   );
 };
 
+//
+
 const displayBrandsPerCountryChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(
     `brandspercountry${queryString}`
@@ -1143,6 +1146,7 @@ const displayDesignPhilosophyUsagePerYearChart = async (queryString = "") => {
     "Design philosophy trend analysis"
   );
 };
+
 const displayTypefaceClassUsagePerYearChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(
     `typefaceClassUsagePerYear${queryString}`
@@ -1225,6 +1229,8 @@ const displayColorTemperatureUsagePerYearChart = async (queryString = "") => {
   );
 };
 
+//
+
 const displayNameTypeUsagePerYearChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(
     `nameTypeUsagePerYear${queryString}`
@@ -1240,6 +1246,7 @@ const displayNameTypeUsagePerYearChart = async (queryString = "") => {
     "Name type trend analysis"
   );
 };
+
 const displayLogoFeaturesUsagePerYearChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(
     `logoFeaturesUsagePerYear${queryString}`
@@ -1398,6 +1405,8 @@ const displayBrandsPerDesignPhilosophyChart = async (queryString = "") => {
     "Brands"
   );
 };
+
+//
 
 const displayBrandsPerCulturalExpressionChart = async (queryString = "") => {
   const chartData = await fetchChartDataFromServer(
@@ -1615,10 +1624,15 @@ const displayAllCharts = () => {
 const applyGlobalFilters = () => {
   const queryString = getQueryString();
 
+  console.log(queryString);
+
   displayChartsFunctions.forEach((chartFunction) => chartFunction(queryString));
   setFiltebrandsPerCityCountedBrandsCitiesCount();
   setFilteredBrandsCountText();
 };
+
+const applyBtn = document.getElementById("apply-btn");
+applyBtn?.addEventListener("click", applyGlobalFilters);
 
 // End of displaying all charts logic
 
@@ -1668,7 +1682,6 @@ const getFilteredBrandsCitiesCount = async () => {
 
   return brandsPerCityCount;
 };
-
 const setFiltebrandsPerCityCountedBrandsCitiesCount = async () => {
   const filteredBrandsCitiesCount = await getFilteredBrandsCitiesCount();
   const filteredBrandsCitiesCountKeys = Object.keys(filteredBrandsCitiesCount);
