@@ -14,8 +14,8 @@ const FILTERS = [
 
 const fetchChartDataFromServer = async (chartName, headers = {}) => {
   const nonProcessedData = await fetch(
-    // `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
-    `http://localhost:3000/api/v1/charts/${chartName}`,
+    `https://brandcoat-charts-api.up.railway.app/api/v1/charts/${chartName}`,
+    // `http://localhost:3000/api/v1/charts/${chartName}`,
 
     {
       headers: headers,
